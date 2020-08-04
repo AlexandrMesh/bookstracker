@@ -1,12 +1,10 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 
-const ToRead = () => {
-  return (
-    <View>
-      <Text>ToRead screen</Text>
-    </View>
-  );
-};
+const ToRead = () => (
+  <View>
+    <Text>ToRead screen</Text>
+  </View>
+);
 
 export default ToRead;
