@@ -4,6 +4,7 @@ import DataService from '../http/services/data';
 
 const Books = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+
   useEffect(() => {
     DataService()
       .getData({ page: 1 })
