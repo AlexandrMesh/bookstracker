@@ -19,11 +19,18 @@ module.exports = {
   },
   plugins: ['react', 'prettier', 'jest'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     'arrow-parens': ['error'],
     'object-curly-newline': ['error', { consistent: true }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],
     'react/prop-types': ['error', { ignore: ['navigation'] }],
+    'linebreak-style': 0,
+    'max-len': ['error', { code: 150 }],
   },
 };
