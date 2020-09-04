@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import configureStore from './src/redux/store/configureStore';
 import Books from './src/screens/Books';
 import ToRead from './src/screens/ToRead';
+import Signin from './src/screens/Auth/Signin';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +17,7 @@ const App = () => (
       <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: () => <Text>{route.name}</Text> })}>
         <Tab.Screen name="Books" component={Books} options={{ title: 'Books' }} />
         <Tab.Screen name="ToRead" component={ToRead} />
+        <Tab.Screen name="Signin" component={Signin} />
       </Tab.Navigator>
     </NavigationContainer>
   </Provider>

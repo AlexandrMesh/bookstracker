@@ -14,16 +14,14 @@ const Books = ({ navigation, data, getData }) => {
     <View>
       <Text>Book screen</Text>
       <Button title="Go to read" onPress={() => navigation.navigate('ToRead')} />
-      <FlatList data={data.data} renderItem={renderItem} keyExtractor={(item) => item._id} />
+      <FlatList data={data} renderItem={renderItem} keyExtractor={(item) => item._id} />
     </View>
   );
 };
 
 Books.propTypes = {
   getData: PropTypes.func.isRequired,
-  data: PropTypes.shape({
-    data: PropTypes.string,
-  }).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default Books;

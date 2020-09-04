@@ -32,5 +32,6 @@ module.exports = {
     'react/prop-types': ['error', { ignore: ['navigation'] }],
     'linebreak-style': 0,
     'max-len': ['error', { code: 150 }],
+    'no-unused-expressions': ['error', { allowShortCircuit: true }],
   },
 };
