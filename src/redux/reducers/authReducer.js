@@ -1,8 +1,11 @@
 import createReducer from '../../utils/createReducer';
-import { SET_TOKEN, SET_SIGN_IN_EMAIL, SET_SIGN_IN_PASSWORD, SET_SIGN_IN_LOADING } from '../actions/authActions';
+import { SET_TOKEN, SET_SIGN_IN_EMAIL, SET_SIGN_IN_PASSWORD, SET_SIGN_IN_LOADING, SET_IS_GOOGLE_ACCOUNT, SET_PROFILE } from '../actions/authActions';
 
 const initialState = {
   token: '',
+  isGoogleAccount: false,
+  profile: {},
+  isLoading: false,
   signin: {
     email: {
       value: '',
@@ -12,7 +15,6 @@ const initialState = {
       value: '',
       errors: [],
     },
-    isLoading: false,
   },
   signup: {
     email: {
@@ -23,7 +25,6 @@ const initialState = {
       value: '',
       errors: [],
     },
-    isLoading: false,
   },
 };
 
@@ -54,9 +55,14 @@ export default createReducer(initialState, (state, action) => ({
   }),
   [SET_SIGN_IN_LOADING]: () => ({
     ...state,
-    signin: {
-      ...state.signin,
-      isLoading: action.isLoading,
-    },
+    isLoading: action.isLoading,
+  }),
+  [SET_IS_GOOGLE_ACCOUNT]: () => ({
+    ...state,
+    isGoogleAccount: action.isGoogleAccount,
+  }),
+  [SET_PROFILE]: () => ({
+    ...state,
+    profile: action.profile,
   }),
 }));

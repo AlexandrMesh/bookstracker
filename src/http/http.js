@@ -9,7 +9,7 @@ const http = axios.create({
 http.interceptors.request.use(
   async (config) => {
     try {
-      const value = await AsyncStorage.getItem('authToken');
+      const value = await AsyncStorage.getItem('token');
       // eslint-disable-next-line no-param-reassign
       if (value) config.headers.Authorization = `Bearer ${value}`;
     } catch (e) {
