@@ -4,10 +4,16 @@ import { Text } from 'react-native';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import configureStore from './src/redux/store/configureStore';
 import Books from './src/screens/Books';
 import ToRead from './src/screens/ToRead';
 import Signin from './src/screens/Auth/Signin';
+
+GoogleSignin.configure({
+  offlineAccess: true,
+  webClientId: '424932684716-m79mq3d4akt2gft7plia6r5keaos68t1.apps.googleusercontent.com',
+});
 
 const Tab = createBottomTabNavigator();
 

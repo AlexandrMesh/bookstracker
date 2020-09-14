@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { signIn, setSignInEmail, setSignInPassword } from '../../../redux/actions/authActions';
+import { signIn, setSignInEmail, setSignInPassword, signOut } from '../../../redux/actions/authActions';
 import { getSignInEmail, getSignInPassword, isLoading } from '../../../redux/selectors/auth';
 import Signin from './Signin';
 
@@ -11,6 +11,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   signIn: (params) => dispatch(signIn(params)),
+  signOut: (params) => dispatch(signOut(params)),
   setSignInEmail: (email) => dispatch(setSignInEmail(email)),
   setSignInPassword: (password) => dispatch(setSignInPassword(password)),
 });
