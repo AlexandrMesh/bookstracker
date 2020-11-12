@@ -25,6 +25,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'no-shadow': 'off',
     'arrow-parens': ['error'],
     'object-curly-newline': ['error', { consistent: true }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
