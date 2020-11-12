@@ -1,8 +1,7 @@
-/* eslint-disable import/no-unresolved */
 import { connect } from 'react-redux';
 import { signIn, signOut, setSignInErrors } from '../../../redux/actions/authActions';
 import { isLoading, getErrors } from '../../../redux/selectors/auth';
-import SignIn from './Signin';
+import SignIn from './SignIn';
 
 const mapStateToProps = (state) => ({
   isLoading: isLoading(state),
