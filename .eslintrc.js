@@ -25,6 +25,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'no-shadow': 'off',
     'arrow-parens': ['error'],
     'object-curly-newline': ['error', { consistent: true }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
@@ -32,5 +33,6 @@ module.exports = {
     'react/prop-types': ['error', { ignore: ['navigation'] }],
     'linebreak-style': 0,
     'max-len': ['error', { code: 150 }],
+    'no-unused-expressions': ['error', { allowShortCircuit: true }],
   },
 };
