@@ -1,19 +1,18 @@
+/* eslint-disable import/no-unresolved */
 import { connect } from 'react-redux';
-import { signIn, setSignInEmail, setSignInPassword, signOut } from '../../../redux/actions/authActions';
-import { getSignInEmail, getSignInPassword, isLoading } from '../../../redux/selectors/auth';
-import Signin from './Signin';
+import { signIn, signOut, setSignInErrors } from '../../../redux/actions/authActions';
+import { isLoading, getErrors } from '../../../redux/selectors/auth';
+import SignIn from './Signin';
 
 const mapStateToProps = (state) => ({
-  email: getSignInEmail(state),
-  password: getSignInPassword(state),
   isLoading: isLoading(state),
+  errors: getErrors(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   signIn: (params) => dispatch(signIn(params)),
   signOut: (params) => dispatch(signOut(params)),
-  setSignInEmail: (email) => dispatch(setSignInEmail(email)),
-  setSignInPassword: (password) => dispatch(setSignInPassword(password)),
+  setSignInErrors: (errors) => dispatch(setSignInErrors(errors)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signin);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

@@ -1,29 +1,41 @@
 import { GoogleSignin } from '@react-native-community/google-signin';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthService from '../../http/services/auth';
 
 const PREFIX = 'AUTH';
 
-export const SET_TOKEN = `${PREFIX}/SET_TOKEN`;
-export const SET_SIGN_IN_EMAIL = `${PREFIX}/SET_SIGN_IN_EMAIL`;
-export const SET_SIGN_IN_PASSWORD = `${PREFIX}/SET_SIGN_IN_PASSWORD`;
+export const SET_IS_SIGNED_IN = `${PREFIX}/SET_IS_SIGNED_IN`;
 export const SET_SIGN_IN_LOADING = `${PREFIX}/SET_SIGN_IN_LOADING`;
 export const SET_IS_GOOGLE_ACCOUNT = `${PREFIX}/SET_IS_GOOGLE_ACCOUNT`;
 export const SET_PROFILE = `${PREFIX}/SET_PROFILE`;
+export const SET_IS_CHECKED = `${PREFIX}/SET_IS_CHECKED`;
+export const SET_SIGN_IN_ERRORS = `${PREFIX}/SET_SIGN_IN_ERRORS`;
+export const SET_SIGN_IN_EMAIL_ERROR = `${PREFIX}/SET_SIGN_IN_EMAIL_ERROR`;
+export const SET_SIGN_IN_PASSWORD_ERROR = `${PREFIX}/SET_SIGN_IN_PASSWORD_ERROR`;
 
-export const setToken = (token) => ({
-  type: SET_TOKEN,
-  token,
+export const setIsSignedIn = (isSignedIn) => ({
+  type: SET_IS_SIGNED_IN,
+  isSignedIn,
 });
 
-export const setSignInEmail = (email) => ({
-  type: SET_SIGN_IN_EMAIL,
-  email,
+export const setIsChecked = (isChecked) => ({
+  type: SET_IS_CHECKED,
+  isChecked,
 });
 
-export const setSignInPassword = (password) => ({
-  type: SET_SIGN_IN_PASSWORD,
-  password,
+export const setSignInErrors = (errors) => ({
+  type: SET_SIGN_IN_ERRORS,
+  errors,
+});
+
+export const setSignInEmailError = (error) => ({
+  type: SET_SIGN_IN_EMAIL_ERROR,
+  error,
+});
+
+export const setSignInPasswordError = (error) => ({
+  type: SET_SIGN_IN_PASSWORD_ERROR,
+  error,
 });
 
 export const setIsGoogleAccount = (isGoogleAccount) => ({
@@ -42,16 +54,18 @@ export const setProfile = (profile) => ({
 });
 
 export const checkAuth = ({ token }) => async (dispatch) => {
-  dispatch(setSignInLoading(true));
-  const isGoogleSignedIn = await GoogleSignin.isSignedIn();
   try {
+    const isGoogleSignedIn = await GoogleSignin.isSignedIn();
     const { data } = await AuthService().checkAuth({ token });
-    data.profile && dispatch(setProfile(data.profile));
-    isGoogleSignedIn && dispatch(setIsGoogleAccount(true));
+    if (data.profile) {
+      dispatch(setProfile(data.profile));
+      dispatch(setIsSignedIn(true));
+      isGoogleSignedIn && dispatch(setIsGoogleAccount(true));
+    }
   } catch (e) {
     console.log(e);
   } finally {
-    dispatch(setSignInLoading(false));
+    dispatch(setIsChecked(true));
   }
 };
 
@@ -64,9 +78,9 @@ export const signIn = ({ email, password, isGoogleAccount }) => async (dispatch)
         idToken,
         user: { email: googleEmail },
       } = await GoogleSignin.signIn();
-      const { data } = await AuthService().signin({ email: googleEmail, googleToken: idToken });
+      const { data } = await AuthService().signIn({ email: googleEmail, googleToken: idToken });
       if (data) {
-        dispatch(setToken(data.token));
+        dispatch(setIsSignedIn(true));
         dispatch(setProfile(data.profile));
         dispatch(setIsGoogleAccount(true));
         try {
@@ -82,9 +96,9 @@ export const signIn = ({ email, password, isGoogleAccount }) => async (dispatch)
     }
   } else {
     try {
-      const { data } = await AuthService().signin({ email, password });
+      const { data } = await AuthService().signIn({ email, password });
       if (data) {
-        dispatch(setToken(data.token));
+        dispatch(setIsSignedIn(true));
         dispatch(setProfile(data.profile));
         try {
           await AsyncStorage.setItem('token', data.token);
@@ -104,20 +118,20 @@ export const signIn = ({ email, password, isGoogleAccount }) => async (dispatch)
 
 export const signOut = () => async (dispatch) => {
   dispatch(setSignInLoading(true));
-  const isGoogleSignedIn = await GoogleSignin.isSignedIn();
-  if (isGoogleSignedIn) {
-    try {
+  try {
+    const isGoogleSignedIn = await GoogleSignin.isSignedIn();
+    if (isGoogleSignedIn) {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       dispatch(setIsGoogleAccount(false));
-    } catch (error) {
-      console.error(error);
     }
+  } catch (error) {
+    console.error(error);
   }
   try {
     await AsyncStorage.removeItem('token');
     dispatch(setProfile({}));
-    dispatch(setToken(''));
+    dispatch(setIsSignedIn(false));
   } catch (error) {
     console.log(error);
   } finally {

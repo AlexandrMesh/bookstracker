@@ -2,7 +2,7 @@ import http from '../http';
 import config from '../../config/api';
 
 const AuthService = () => ({
-  signin: (params) => http.post(`${config.API_URL}/signin`, params),
+  signIn: (params) => http.post(`${config.API_URL}/signIn`, params),
   checkAuth: (params) => http.post(`${config.API_URL}/checkAuth`, params),
 });
 
