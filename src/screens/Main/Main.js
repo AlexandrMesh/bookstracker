@@ -8,7 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../Splash/Splash';
 import Books from '../Books';
 import ToRead from '../ToRead';
-import SignIn from '../Auth/Signin';
+// eslint-disable-next-line import/no-unresolved
+import SignIn from '../Auth/Signiin';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
