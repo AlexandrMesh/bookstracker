@@ -9,6 +9,9 @@ import Splash from '../Splash/Splash';
 import Books from '../Books';
 import ToRead from '../ToRead';
 import SignIn from '../Auth/SignIn';
+import ResetPassword from '../Auth/ResetPassword';
+import CodeVerification from '../Auth/ResetPassword/CodeVerification';
+import NewPassword from '../Auth/ResetPassword/NewPassword';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -41,6 +44,9 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
       ) : (
         <Stack.Navigator>
           <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} />
+          <Stack.Screen name="CodeVerification" component={CodeVerification} />
+          <Stack.Screen name="NewPassword" component={NewPassword} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

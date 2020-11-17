@@ -1,6 +1,7 @@
 import { GoogleSignin } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthService from '../../http/services/auth';
+import { getResetPasswordEmail } from '../selectors/auth';
 
 const PREFIX = 'AUTH';
 
@@ -12,6 +13,49 @@ export const SET_IS_CHECKED = `${PREFIX}/SET_IS_CHECKED`;
 export const SET_SIGN_IN_ERRORS = `${PREFIX}/SET_SIGN_IN_ERRORS`;
 export const SET_SIGN_IN_EMAIL_ERROR = `${PREFIX}/SET_SIGN_IN_EMAIL_ERROR`;
 export const SET_SIGN_IN_PASSWORD_ERROR = `${PREFIX}/SET_SIGN_IN_PASSWORD_ERROR`;
+
+export const SET_RESET_PASSWORD_LOADING = `${PREFIX}/SET_RESET_PASSWORD_LOADING`;
+export const SET_RESET_PASSWORD_EMAIL = `${PREFIX}/SET_RESET_PASSWORD_EMAIL`;
+export const SET_RESET_PASSWORD_EMAIL_ERROR = `${PREFIX}/SET_RESET_PASSWORD_EMAIL_ERROR`;
+export const SET_RESET_PASSWORD_CODE = `${PREFIX}/SET_RESET_PASSWORD_CODE`;
+export const SET_RESET_PASSWORD_CODE_ERROR = `${PREFIX}/SET_RESET_PASSWORD_CODE_ERROR`;
+export const SET_RESET_PASSWORD_NEW_PASSWORD = `${PREFIX}/SET_RESET_PASSWORD_NEW_PASSWORD`;
+export const SET_RESET_PASSWORD_NEW_PASSWORD_ERROR = `${PREFIX}/SET_RESET_PASSWORD_NEW_PASSWORD_ERROR`;
+
+export const setResetPasswordLoading = (isLoading) => ({
+  type: SET_RESET_PASSWORD_LOADING,
+  isLoading,
+});
+
+export const setResetPasswordEmail = (email) => ({
+  type: SET_RESET_PASSWORD_EMAIL,
+  email,
+});
+
+export const setResetPasswordEmailError = (error) => ({
+  type: SET_RESET_PASSWORD_EMAIL_ERROR,
+  error,
+});
+
+export const setResetPasswordCode = (code) => ({
+  type: SET_RESET_PASSWORD_CODE,
+  code,
+});
+
+export const setResetPasswordCodeError = (error) => ({
+  type: SET_RESET_PASSWORD_CODE_ERROR,
+  error,
+});
+
+export const setResetPasswordNewPassword = (password) => ({
+  type: SET_RESET_PASSWORD_NEW_PASSWORD,
+  password,
+});
+
+export const setResetPasswordNewPasswordError = (error) => ({
+  type: SET_RESET_PASSWORD_NEW_PASSWORD_ERROR,
+  error,
+});
 
 export const setIsSignedIn = (isSignedIn) => ({
   type: SET_IS_SIGNED_IN,
@@ -138,4 +182,18 @@ export const signOut = () => async (dispatch) => {
     dispatch(setSignInLoading(false));
   }
   return true;
+};
+
+export const resetPassword = async (dispatch, getState) => {
+  dispatch(setResetPasswordLoading(true));
+  try {
+    const email = getResetPasswordEmail(getState());
+    const { data } = await AuthService().resetPassword({ email });
+    return data.isSent;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    dispatch(setResetPasswordLoading(false));
+  }
+  return false;
 };

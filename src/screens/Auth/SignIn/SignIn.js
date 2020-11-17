@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, ActivityIndicator } from 'react-native';
 import { isEmpty } from 'ramda';
 import validationRules from '../../../constants/auth';
 
-const SignIn = ({ signIn, signOut, isLoading, errors, setSignInErrors }) => {
+const SignIn = ({ signIn, signOut, isLoading, errors, setSignInErrors, navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -63,6 +63,7 @@ const SignIn = ({ signIn, signOut, isLoading, errors, setSignInErrors }) => {
         }}
       />
       <Button title="Google Signout" onPress={() => signOut()} />
+      <Button title="Reset Password" onPress={() => navigation.navigate('ResetPassword')} />
       {isLoading && <ActivityIndicator color="blue" />}
     </View>
   );
