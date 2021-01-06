@@ -1,7 +1,7 @@
 import { GoogleSignin } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthService from '../../http/services/auth';
-import { getResetPasswordEmail } from '../selectors/auth';
+import { getResetPasswordEmail, getResetPasswordCode, getResetPasswordNewPassword } from '../selectors/auth';
 
 const PREFIX = 'AUTH';
 
@@ -104,13 +104,14 @@ export const checkAuth = ({ token }) => async (dispatch) => {
     if (data.profile) {
       dispatch(setProfile(data.profile));
       dispatch(setIsSignedIn(true));
-      isGoogleSignedIn && dispatch(setIsGoogleAccount(true));
+      return isGoogleSignedIn && dispatch(setIsGoogleAccount(true));
     }
   } catch (e) {
     console.log(e);
   } finally {
     dispatch(setIsChecked(true));
   }
+  return true;
 };
 
 export const signIn = ({ email, password, isGoogleAccount }) => async (dispatch) => {
@@ -190,6 +191,37 @@ export const resetPassword = async (dispatch, getState) => {
     const email = getResetPasswordEmail(getState());
     const { data } = await AuthService().resetPassword({ email });
     return data.isSent;
+  } catch (err) {
+    // Set errors into password error
+    console.log(err.response.data);
+  } finally {
+    dispatch(setResetPasswordLoading(false));
+  }
+  return true;
+};
+
+export const verifyResetPasswordCode = async (dispatch, getState) => {
+  dispatch(setResetPasswordLoading(true));
+  try {
+    const code = getResetPasswordCode(getState());
+    const email = getResetPasswordEmail(getState());
+    const { data } = await AuthService().verifyResetPasswordCode({ code, email });
+    return data.verified;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    dispatch(setResetPasswordLoading(false));
+  }
+  return false;
+};
+
+export const setNewPassword = async (dispatch, getState) => {
+  dispatch(setResetPasswordLoading(true));
+  try {
+    const newPassword = getResetPasswordNewPassword(getState());
+    const email = getResetPasswordEmail(getState());
+    const { data } = await AuthService().setNewPassword({ email, newPassword });
+    return data.isUpdated;
   } catch (e) {
     console.log(e);
   } finally {

@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, Button, TextInput } from 'react-native';
 
-const ResetPassword = ({ email, setEmail, resetPassword, navigation }) => {
+const ResetPassword = ({ email, setEmail, resetPassword }) => {
   const handleResetPassword = async () => {
     try {
       const result = await resetPassword();
-      result && navigation.navigate('CodeVerification');
+      console.log(result, 'result');
+      // result && navigation.navigate('CodeVerification');
     } catch (err) {
-      console.log(err);
+      console.log(err, 'error from component');
     }
   };
 
