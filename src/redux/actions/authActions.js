@@ -97,10 +97,11 @@ export const setProfile = (profile) => ({
   profile,
 });
 
-export const checkAuth = ({ token }) => async (dispatch) => {
+export const checkAuth = (token) => async (dispatch) => {
+  console.log(token, 'token');
   try {
     const isGoogleSignedIn = await GoogleSignin.isSignedIn();
-    const { data } = await AuthService().checkAuth({ token });
+    const { data } = await AuthService().checkAuth(token);
     if (data.profile) {
       dispatch(setProfile(data.profile));
       dispatch(setIsSignedIn(true));

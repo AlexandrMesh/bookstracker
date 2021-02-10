@@ -8,6 +8,6 @@ const initialState = {
 export default createReducer(initialState, (state, action) => ({
   [GET_DATA]: () => ({
     ...state,
-    data: action.data,
+    data: [...state.data, ...action.data],
   }),
 }));

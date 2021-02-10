@@ -20,7 +20,7 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
   const checkAuthentication = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      token && (await checkAuth({ token: 2 }));
+      token && (await checkAuth(token));
     } catch (e) {
       console.error(e);
     }

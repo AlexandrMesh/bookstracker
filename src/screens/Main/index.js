@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  checkAuth: (params) => dispatch(checkAuth(params)),
+  checkAuth: (token) => dispatch(checkAuth(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
