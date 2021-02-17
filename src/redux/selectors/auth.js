@@ -1,5 +1,6 @@
 import { path } from 'ramda';
 
+export const getUserId = path(['auth', 'profile', '_id']);
 export const getSignInEmail = path(['auth', 'signIn', 'email', 'value']);
 export const getSignInPassword = path(['auth', 'signIn', 'password', 'value']);
 export const isLoading = path(['auth', 'isLoading']);

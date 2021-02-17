@@ -1,14 +1,15 @@
 import { connect } from 'react-redux';
-import { getData } from '../../redux/actions/dataActions';
+import { getBookList, addBookToList } from '../../redux/actions/booksActions';
 import Books from './Books';
-import { getBooks } from '../../redux/selectors/data';
+import { getBooks } from '../../redux/selectors/books';
 
 const mapStateToProps = (state) => ({
-  data: getBooks(state),
+  bookList: getBooks(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getData: (params) => dispatch(getData(params)),
+  getBookList: (params) => dispatch(getBookList(params)),
+  addBookToList: (params) => dispatch(addBookToList(params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Books);

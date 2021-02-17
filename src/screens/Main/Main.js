@@ -7,7 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../Splash/Splash';
 import Books from '../Books';
-import ToRead from '../ToRead';
+import Book from '../Book';
+import PlannedBooks from '../PlannedBooks';
 import SignIn from '../Auth/SignIn';
 import ResetPassword from '../Auth/ResetPassword';
 import CodeVerification from '../Auth/ResetPassword/CodeVerification';
@@ -15,6 +16,7 @@ import NewPassword from '../Auth/ResetPassword/NewPassword';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const RootStack = createStackNavigator();
 
 const Main = ({ checkAuth, isChecked, isSignedIn }) => {
   const checkAuthentication = async () => {
@@ -34,13 +36,20 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
     return <Splash />;
   }
 
+  const HomeTabs = () => (
+    <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: () => <Text>{route.name}</Text> })}>
+      <Tab.Screen name="Books" component={Books} />
+      <Tab.Screen name="PlannedBooks" component={PlannedBooks} />
+    </Tab.Navigator>
+  );
+
   return (
     <NavigationContainer>
       {isSignedIn ? (
-        <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: () => <Text>{route.name}</Text> })}>
-          <Tab.Screen name="Books" component={Books} options={{ title: 'Books' }} />
-          <Tab.Screen name="ToRead" component={ToRead} />
-        </Tab.Navigator>
+        <RootStack.Navigator>
+          <RootStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+          <RootStack.Screen name="Book" component={Book} />
+        </RootStack.Navigator>
       ) : (
         <Stack.Navigator>
           <Stack.Screen name="SignIn" component={SignIn} />
