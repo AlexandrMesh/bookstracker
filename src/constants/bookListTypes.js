@@ -1,5 +1,5 @@
 export default {
-  PLANNED: 'plannedBookIds',
-  IN_PROGRESS: 'inProgressBookIds',
-  COMPLETED: 'completedBookIds',
+  PLANNED: 'customPlannedBooks',
+  IN_PROGRESS: 'inProgressBooks',
+  COMPLETED: 'completedBooks',
 };

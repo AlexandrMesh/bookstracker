@@ -1,7 +1,7 @@
 import { GoogleSignin } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthService from '../../http/services/auth';
-import { setPlannedBookIds } from './booksActions';
+import { setCustomPlannedBooks } from './booksActions';
 import { getResetPasswordEmail, getResetPasswordCode, getResetPasswordNewPassword } from '../selectors/auth';
 
 const PREFIX = 'AUTH';
@@ -103,9 +103,9 @@ export const checkAuth = (token) => async (dispatch) => {
     const isGoogleSignedIn = await GoogleSignin.isSignedIn();
     const { data } = await AuthService().checkAuth(token);
     if (data.profile) {
-      const { _id, email, plannedBookIds } = data.profile;
+      const { _id, email, customPlannedBooks } = data.profile;
       dispatch(setProfile({ _id, email }));
-      dispatch(setPlannedBookIds(plannedBookIds));
+      dispatch(setCustomPlannedBooks(customPlannedBooks));
       dispatch(setIsSignedIn(true));
       return isGoogleSignedIn && dispatch(setIsGoogleAccount(true));
     }

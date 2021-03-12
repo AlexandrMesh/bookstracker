@@ -5,14 +5,18 @@ import {
   SET_BOOKS_LOADING,
   SET_BOOK_DETAILS_LOADING,
   CLEAR_BOOK_DETAILS,
-  ADD_TO_PLANNED_BOOK_IDS,
+  ADD_TO_CUSTOM_PLANNED_BOOKS,
   PLANNED_BOOKS_LOADED,
   IN_PROGRESS_BOOKS_LOADED,
   COMPLETED_BOOKS_LOADED,
-  SET_PLANNED_BOOK_IDS,
+  SET_CUSTOM_PLANNED_BOOKS,
   SET_SHOULD_RELOAD_PLANNED_BOOK_LIST,
   CLEAR_PLANNED_BOOK_LIST,
   SET_PLANNED_BOOKS_LOADING,
+  SET_ADD_BOOK_TO_LIST_LOADING,
+  BOOKS_UPDATED,
+  ADD_BOOK_CATEGORY_ID_TO_FILTER,
+  REMOVE_BOOK_CATEGORY_ID_FROM_FILTER,
 } from '../actions/booksActions';
 
 const initialState = {
@@ -21,14 +25,18 @@ const initialState = {
   inProgressBookList: [],
   completedBookList: [],
   bookDetails: {},
-  plannedBookIds: [],
-  inProgressBookIds: [],
-  completedBookIds: [],
+  customPlannedBooks: [],
+  customInProgressBooks: [],
+  customCompletedBooks: [],
+  filter: {
+    categoryIds: [],
+  },
   isBooksLoading: false,
   isPlannedBooksLoading: false,
   isInProgressBooksLoading: false,
   isCompletedBooksLoading: false,
   isBookDetailsLoading: false,
+  isAddBookToListLoading: false,
   shouldReloadPlannedBookList: false,
 };
 
@@ -37,6 +45,11 @@ export default createReducer(initialState, (state, action) => ({
     ...state,
     isBooksLoading: false,
     bookList: [...state.bookList, ...action.bookList],
+  }),
+
+  [BOOKS_UPDATED]: () => ({
+    ...state,
+    bookList: action.books,
   }),
 
   [SET_PLANNED_BOOKS_LOADING]: () => ({
@@ -83,14 +96,14 @@ export default createReducer(initialState, (state, action) => ({
     bookDetails: initialState.bookDetails,
   }),
 
-  [ADD_TO_PLANNED_BOOK_IDS]: () => ({
+  [ADD_TO_CUSTOM_PLANNED_BOOKS]: () => ({
     ...state,
-    plannedBookIds: [...state.plannedBookIds, action.id],
+    customPlannedBooks: [...state.customPlannedBooks, action.book],
   }),
 
-  [SET_PLANNED_BOOK_IDS]: () => ({
+  [SET_CUSTOM_PLANNED_BOOKS]: () => ({
     ...state,
-    plannedBookIds: action.plannedBookIds,
+    customPlannedBooks: action.customPlannedBooks,
   }),
 
   [SET_SHOULD_RELOAD_PLANNED_BOOK_LIST]: () => ({
@@ -101,5 +114,26 @@ export default createReducer(initialState, (state, action) => ({
   [CLEAR_PLANNED_BOOK_LIST]: () => ({
     ...state,
     plannedBookList: [],
+  }),
+
+  [SET_ADD_BOOK_TO_LIST_LOADING]: () => ({
+    ...state,
+    isAddBookToListLoading: action.isAddBookToListLoading,
+  }),
+
+  [ADD_BOOK_CATEGORY_ID_TO_FILTER]: () => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      categoryIds: [...state.filter.categoryIds, action.id],
+    },
+  }),
+
+  [REMOVE_BOOK_CATEGORY_ID_FROM_FILTER]: () => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      categoryIds: state.filter.categoryIds.filter((bookId) => action.id !== bookId),
+    },
   }),
 }));
