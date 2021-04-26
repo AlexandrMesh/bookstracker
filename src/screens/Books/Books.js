@@ -15,8 +15,20 @@ import {
 } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import CheckBox from '@react-native-community/checkbox';
+import RadioButton from '../../UI/RadioButton';
+import SlideMenu from '../../UI/SlideMenu';
 import useDebouncedSearch from '../../hooks/useDebouncedSearch';
 import styles from './styles';
+
+// Sorting:
+
+// asc
+// desc
+
+// Title (По алфавиту)
+// Rating (По рейтингу)
+// Date added (По дате добавления)
+// Date created (По году выхода)
 
 const Toast = ({ visible, message }) => {
   if (visible) {
@@ -37,9 +49,13 @@ const Books = ({
   addBookCategoryIdToFilter,
   removeBookCategoryIdFromFilter,
 }) => {
+  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected2, setIsSelected2] = useState(false);
+  const [isSelected3, setIsSelected3] = useState(false);
   const [page, setPage] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [bookType, setBookType] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchQuery, handleChangeQuery] = useDebouncedSearch(setSearchText, searchText, 400);
@@ -47,6 +63,12 @@ const Books = ({
   const shouldStartSearch = useRef(false);
   const bookPage = useRef(0);
   const listRef = useRef(null);
+
+  const sortingMenuItems = [
+    { title: 'test 1', isSelected, action: () => setIsSelected(true) },
+    { title: 'test 2', isSelected: isSelected2, action: () => setIsSelected2(true) },
+    { title: 'test 3', isSelected: isSelected3, action: () => setIsSelected3(true) },
+  ];
 
   const replaceBooks = async () => {
     bookPage.current = 0;
@@ -132,6 +154,8 @@ const Books = ({
       )}
       <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} onChangeText={handleChangeText} value={searchQuery} />
       <Button title="Category" onPress={() => setCategoryModalVisible(true)} />
+      <Button title="Filter" onPress={() => setFilterModalVisible(true)} />
+
       {bookList.length > 0 && (
         <VirtualizedList
           ref={listRef}
@@ -199,9 +223,10 @@ const Books = ({
           <View style={styles.modalContent}>
             <View>
               <Text>Категория</Text>
-              <View style={styles.selectCategory}>
+              <Pressable
+                onPress={() => (filterCategoryIds.includes('11') ? removeBookCategoryIdFromFilter('11') : addBookCategoryIdToFilter('11'))}
+                style={styles.selectCategory}>
                 <CheckBox
-                  disabled={false}
                   value={filterCategoryIds.includes('11')}
                   onValueChange={(newValue) => {
                     if (newValue) {
@@ -212,10 +237,9 @@ const Books = ({
                   }}
                 />
                 <Text>11</Text>
-              </View>
+              </Pressable>
               <View style={styles.selectCategory}>
                 <CheckBox
-                  disabled={false}
                   value={filterCategoryIds.includes('12')}
                   onValueChange={(newValue) => {
                     if (newValue) {
@@ -246,6 +270,69 @@ const Books = ({
           </View>
         </View>
       </Modal>
+
+      <Modal animationType="slide" transparent visible={filterModalVisible} onRequestClose={() => setFilterModalVisible(!filterModalVisible)}>
+        {isAddBookToListLoading && (
+          <View style={styles.spinner}>
+            <ActivityIndicator color="blue" size="large" />
+          </View>
+        )}
+        <View style={[styles.modalContainer, styles.filters]}>
+          <View style={styles.modalContent}>
+            <View>
+              <Text>Сортировать:</Text>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => setBookType('customPlannedBooks')}>
+                <View style={[styles.modalItem, bookType === 'customPlannedBooks' ? styles.active : '']}>
+                  <Text style={styles.modalItemText}>По названию: от А до Я</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => setBookType('customInProgressBooks')}>
+                <View style={[styles.modalItem, bookType === 'customInProgressBooks' ? styles.active : '']}>
+                  <Text style={styles.modalItemText}>По названию: от Я до А</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} onPress={() => setBookType('customCompletedBooks')}>
+                <View style={[styles.modalItem, bookType === 'customCompletedBooks' ? styles.active : '']}>
+                  <Text style={styles.modalItemText}>Прочитал</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.controlButtons}>
+            <View style={styles.controlButton}>
+              <Button
+                title="Save"
+                onPress={() => {
+                  setFilterModalVisible(false);
+                }}
+              />
+            </View>
+            <View style={styles.controlButton}>
+              <Button title="Hide" onPress={() => setFilterModalVisible(false)} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <SlideMenu isVisible>
+        {sortingMenuItems.map((item) => (
+          <Pressable
+            style={{
+              borderColor: '#999',
+              paddingLeft: 15,
+              paddingRight: 15,
+              paddingBottom: 10,
+              paddingTop: 10,
+              borderTopWidth: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+            onPress={item.action}>
+            <Text style={{ fontSize: 16 }}>{item.title}</Text>
+            <RadioButton isSelected={item.isSelected} />
+          </Pressable>
+        ))}
+      </SlideMenu>
     </View>
   );
 };

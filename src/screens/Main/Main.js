@@ -44,21 +44,23 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
   );
 
   return (
-    <NavigationContainer>
-      {isSignedIn ? (
-        <RootStack.Navigator>
-          <RootStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
-          <RootStack.Screen name="Book" component={Book} />
-        </RootStack.Navigator>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen name="SignIn" component={SignIn} />
-          <Stack.Screen name="ResetPassword" component={ResetPassword} />
-          <Stack.Screen name="CodeVerification" component={CodeVerification} />
-          <Stack.Screen name="NewPassword" component={NewPassword} />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        {isSignedIn ? (
+          <RootStack.Navigator>
+            <RootStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
+            <RootStack.Screen name="Book" component={Book} />
+          </RootStack.Navigator>
+        ) : (
+          <Stack.Navigator>
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="ResetPassword" component={ResetPassword} />
+            <Stack.Screen name="CodeVerification" component={CodeVerification} />
+            <Stack.Screen name="NewPassword" component={NewPassword} />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    </>
   );
 };
 

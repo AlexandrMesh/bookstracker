@@ -69,5 +69,11 @@ export default StyleSheet.create({
   },
   selectCategory: {
     display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  filters: {
+    backgroundColor: '#fff',
+    height: '50%',
   },
 });

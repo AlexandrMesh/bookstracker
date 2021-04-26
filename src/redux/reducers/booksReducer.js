@@ -30,6 +30,7 @@ const initialState = {
   customCompletedBooks: [],
   filter: {
     categoryIds: [],
+    sortParams: {},
   },
   isBooksLoading: false,
   isPlannedBooksLoading: false,

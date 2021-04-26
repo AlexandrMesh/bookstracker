@@ -19,12 +19,6 @@ module.exports = {
   },
   plugins: ['react', 'prettier', 'jest'],
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: 'auto',
-      },
-    ],
     'no-shadow': 'off',
     'arrow-parens': ['error'],
     'object-curly-newline': ['error', { consistent: true }],
