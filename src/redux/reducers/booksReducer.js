@@ -10,6 +10,8 @@ import {
   IN_PROGRESS_BOOKS_LOADED,
   COMPLETED_BOOKS_LOADED,
   SET_CUSTOM_PLANNED_BOOKS,
+  SET_CUSTOM_IN_PROGRESS_BOOKS,
+  SET_CUSTOM_COMPLETED_BOOKS,
   SET_SHOULD_RELOAD_PLANNED_BOOK_LIST,
   CLEAR_PLANNED_BOOK_LIST,
   SET_PLANNED_BOOKS_LOADING,
@@ -105,6 +107,16 @@ export default createReducer(initialState, (state, action) => ({
   [SET_CUSTOM_PLANNED_BOOKS]: () => ({
     ...state,
     customPlannedBooks: action.customPlannedBooks,
+  }),
+
+  [SET_CUSTOM_IN_PROGRESS_BOOKS]: () => ({
+    ...state,
+    customInProgressBooks: action.customInProgressBooks,
+  }),
+
+  [SET_CUSTOM_COMPLETED_BOOKS]: () => ({
+    ...state,
+    customCompletedBooks: action.customCompletedBooks,
   }),
 
   [SET_SHOULD_RELOAD_PLANNED_BOOK_LIST]: () => ({

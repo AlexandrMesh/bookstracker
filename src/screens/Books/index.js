@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   getBookList,
-  addBookToList,
+  updateUserBook,
   setIsBooksLoading,
   addBookCategoryIdToFilter,
   removeBookCategoryIdFromFilter,
@@ -18,7 +18,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getBookList: (params, shouldUpdate) => dispatch(getBookList(params, shouldUpdate)),
-  addBookToList: (params) => dispatch(addBookToList(params)),
+  updateUserBook: (params) => dispatch(updateUserBook(params)),
   setIsBooksLoading: (params) => dispatch(setIsBooksLoading(params)),
   addBookCategoryIdToFilter: (params) => dispatch(addBookCategoryIdToFilter(params)),
   removeBookCategoryIdFromFilter: (params) => dispatch(removeBookCategoryIdFromFilter(params)),

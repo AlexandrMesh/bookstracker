@@ -18,6 +18,8 @@ export const ADD_TO_IN_PROGRESS_BOOK_IDS = `${PREFIX}/ADD_TO_IN_PROGRESS_BOOK_ID
 export const ADD_TO_CUSTOM_PLANNED_BOOKS = `${PREFIX}/ADD_TO_CUSTOM_PLANNED_BOOKS`;
 export const ADD_TO_COMPLETED_BOOK_IDS = `${PREFIX}/ADD_TO_COMPLETED_BOOK_IDS`;
 export const SET_CUSTOM_PLANNED_BOOKS = `${PREFIX}/SET_CUSTOM_PLANNED_BOOKS`;
+export const SET_CUSTOM_IN_PROGRESS_BOOKS = `${PREFIX}/SET_CUSTOM_IN_PROGRESS_BOOKS`;
+export const SET_CUSTOM_COMPLETED_BOOKS = `${PREFIX}/SET_CUSTOM_COMPLETED_BOOKS`;
 export const PLANNED_BOOKS_LOADED = `${PREFIX}/PLANNED_BOOKS_LOADED`;
 export const IN_PROGRESS_BOOKS_LOADED = `${PREFIX}/IN_PROGRESS_BOOKS_LOADED`;
 export const COMPLETED_BOOKS_LOADED = `${PREFIX}/COMPLETED_BOOKS_LOADED`;
@@ -75,6 +77,16 @@ export const completedBooksLoaded = (completedBookList) => ({
 export const setCustomPlannedBooks = (customPlannedBooks) => ({
   type: SET_CUSTOM_PLANNED_BOOKS,
   customPlannedBooks,
+});
+
+export const setCustomInProgressBooks = (customInProgressBooks) => ({
+  type: SET_CUSTOM_IN_PROGRESS_BOOKS,
+  customInProgressBooks,
+});
+
+export const setCustomCompletedBooks = (customCompletedBooks) => ({
+  type: SET_CUSTOM_COMPLETED_BOOKS,
+  customCompletedBooks,
 });
 
 export const bookDetailsLoaded = (bookDetails) => ({
@@ -192,14 +204,31 @@ export const getBookDetails = (params) => async (dispatch) => {
   }
 };
 
-export const addBookToList = (params) => async (dispatch, getState) => {
+export const getUserBooks = (params) => async (dispatch) => {
+  try {
+    const { customPlannedBooks, customInProgressBooks, customCompletedBooks } = await DataService().getUserBooks(params);
+    dispatch(setCustomPlannedBooks(customPlannedBooks));
+    dispatch(setCustomInProgressBooks(customInProgressBooks));
+    dispatch(setCustomCompletedBooks(customCompletedBooks));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateUserBook = (params) => async (dispatch, getState) => {
   dispatch(setAddBookToListLoading(true));
   const userId = getUserId(getState());
   try {
-    const { data } = await DataService().addBookToList({ ...params, userId });
-    dispatch(setCustomPlannedBooks(data));
-    dispatch(clearPlannedBookList);
-    dispatch(setShouldReloadPlannedBookList(true));
+    const {
+      data: { customPlannedBooks, customInProgressBooks, customCompletedBooks },
+    } = await DataService().updateUserBook({ ...params, userId });
+    if (params.bookType === 'customPlannedBooks') {
+      dispatch(clearPlannedBookList);
+      dispatch(setShouldReloadPlannedBookList(true));
+    }
+    dispatch(setCustomPlannedBooks(customPlannedBooks));
+    dispatch(setCustomInProgressBooks(customInProgressBooks));
+    dispatch(setCustomCompletedBooks(customCompletedBooks));
   } catch (e) {
     console.log(e);
   } finally {
