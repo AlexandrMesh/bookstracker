@@ -17,8 +17,27 @@ export const getFilterBookCategoryIds = path(['books', 'filter', 'categoryIds'])
 
 export const deriveFilterBookCategoryIds = createSelector([getFilterBookCategoryIds], (categoryIds) => categoryIds.join(','));
 
-export const deriveBooks = createSelector(
-  [getBooks, getCustomPlannedBooks, getCustomInProgressBooks, getCustomCompletedBooks],
+export const deriveBooks = (bookType) =>
+  createSelector(
+    [getBooks, getPlannedBooks, getCustomPlannedBooks, getCustomInProgressBooks, getCustomCompletedBooks],
+    // eslint-disable-next-line arrow-body-style
+    (books, plannedBooks, customPlannedBooks, customInProgressBooks, customCompletedBooks) => {
+      const bookList = {
+        [bookListTypes.PLANNED]: plannedBooks,
+      };
+
+      return (bookList[bookType] || books).map((book) => {
+        const isPlanned = customPlannedBooks.some((customPlannedBook) => book._id === customPlannedBook.id) && bookListTypes.PLANNED;
+        const isInProgress = customInProgressBooks.some((customInProgressBook) => book._id === customInProgressBook.id) && bookListTypes.IN_PROGRESS;
+        const isCompleted = customCompletedBooks.some((customCompleted) => book._id === customCompleted.id) && bookListTypes.COMPLETED;
+        const type = isPlanned || isInProgress || isCompleted;
+        return type ? { ...book, type } : { ...book };
+      });
+    },
+  );
+
+export const derivePlannedBooks = createSelector(
+  [getPlannedBooks, getCustomPlannedBooks, getCustomInProgressBooks, getCustomCompletedBooks],
   // eslint-disable-next-line arrow-body-style
   (books, customPlannedBooks, customInProgressBooks, customCompletedBooks) => {
     return books.map((book) => {

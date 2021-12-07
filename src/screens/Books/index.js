@@ -10,7 +10,7 @@ import Books from './Books';
 import { deriveBooks, getIsAddBookToListLoading, getIsBooksLoading, deriveFilterBookCategoryIds } from '../../redux/selectors/books';
 
 const mapStateToProps = (state) => ({
-  bookList: deriveBooks(state),
+  bookList: deriveBooks('')(state),
   isAddBookToListLoading: getIsAddBookToListLoading(state),
   isBooksLoading: getIsBooksLoading(state),
   filterCategoryIds: deriveFilterBookCategoryIds(state),

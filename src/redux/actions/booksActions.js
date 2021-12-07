@@ -169,6 +169,7 @@ export const getPlannedBookList = (params) => async (dispatch, getState) => {
   try {
     const { data } = await DataService().getBookList({ ...params, userId, bookListType });
     data && dispatch(plannedBooksLoaded(mapPlannedBooks(data, customPlannedBooks)));
+    dispatch(setShouldReloadPlannedBookList(false));
   } catch (e) {
     console.log(e);
   }
@@ -222,10 +223,11 @@ export const updateUserBook = (params) => async (dispatch, getState) => {
     const {
       data: { customPlannedBooks, customInProgressBooks, customCompletedBooks },
     } = await DataService().updateUserBook({ ...params, userId });
-    if (params.bookType === 'customPlannedBooks') {
-      dispatch(clearPlannedBookList);
-      dispatch(setShouldReloadPlannedBookList(true));
-    }
+    // if (params.bookType === 'customPlannedBooks') {
+    //   dispatch(clearPlannedBookList);
+    // }
+    dispatch(clearPlannedBookList);
+    dispatch(setShouldReloadPlannedBookList(true));
     dispatch(setCustomPlannedBooks(customPlannedBooks));
     dispatch(setCustomInProgressBooks(customInProgressBooks));
     dispatch(setCustomCompletedBooks(customCompletedBooks));

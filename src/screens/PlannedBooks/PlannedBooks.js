@@ -1,30 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Button, VirtualizedList, Image, Pressable, Modal } from 'react-native';
+import { View, Text, Button, VirtualizedList, Image, Pressable } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import bookListTypes from '../../constants/bookListTypes';
+import SlideMenu from '../../UI/SlideMenu';
+import RadioButton from '../../UI/RadioButton';
 import styles from './styles';
 
-const PlannedBooks = ({
-  navigation,
-  plannedBookList,
-  getPlannedBookList,
-  addBookToList,
-  shouldReloadPlannedBookList,
-  setShouldReloadPlannedBookList,
-}) => {
+const PlannedBooks = ({ navigation, plannedBookList, getPlannedBookList, updateUserBook, shouldReloadPlannedBookList }) => {
   const [page, setPage] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const bookId = useRef('');
   const isFocused = useIsFocused();
+  const [bookType, setBookType] = useState('');
+
+  const actionTypes = [
+    { title: 'Хочу прочитать', isSelected: bookType === bookListTypes.PLANNED, action: () => setBookType(bookListTypes.PLANNED) },
+    { title: 'Читаю', isSelected: bookType === bookListTypes.IN_PROGRESS, action: () => setBookType(bookListTypes.IN_PROGRESS) },
+    { title: 'Прочитал', isSelected: bookType === bookListTypes.COMPLETED, action: () => setBookType(bookListTypes.COMPLETED) },
+  ];
 
   useEffect(() => {
-    getPlannedBookList({ page });
+    !shouldReloadPlannedBookList && getPlannedBookList({ page });
   }, [page]);
 
   useEffect(() => {
     if (isFocused && shouldReloadPlannedBookList) {
       setPage(0);
-      setShouldReloadPlannedBookList(false);
+      getPlannedBookList({ page: 0 });
     }
   }, [shouldReloadPlannedBookList, isFocused]);
 
@@ -33,6 +36,7 @@ const PlannedBooks = ({
     title: plannedBookList[index].title,
     coverPath: plannedBookList[index].coverPath,
     rating: plannedBookList[index].rating,
+    type: plannedBookList[index].type,
   });
 
   const renderItem = ({ item }) => (
@@ -53,10 +57,11 @@ const PlannedBooks = ({
       </Text>
 
       <Button
-        title="To Read"
+        title={item.type || 'to read'}
         onPress={() => {
-          setModalVisible(true);
           bookId.current = item.id;
+          setBookType(item.type);
+          setModalVisible(true);
         }}
       />
     </View>
@@ -76,34 +81,56 @@ const PlannedBooks = ({
           onEndReachedThreshold={0.5}
         />
       )}
-      <Modal animationType="slide" visible={modalVisible} onRequestClose={() => setModalVisible(!modalVisible)}>
-        <View style={styles.modalContainer}>
-          <Text>Добавить книгу</Text>
-          <Pressable onPress={() => addBookToList({ bookId: bookId.current })}>
-            <View style={styles.modalItem}>
-              <Text style={styles.modalItemText}>К прочтению</Text>
-            </View>
+      <SlideMenu
+        isVisible={modalVisible}
+        title="Добавить в список"
+        resetTitle={bookType ? 'Сброс' : ''}
+        onReset={() => setBookType('')}
+        onClose={() => setModalVisible(false)}>
+        {actionTypes.map((item) => (
+          <Pressable
+            key={item.title}
+            style={{
+              borderColor: '#999',
+              paddingLeft: 15,
+              paddingRight: 15,
+              paddingBottom: 10,
+              paddingTop: 10,
+              borderTopWidth: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+            onPress={item.action}>
+            <Text style={{ fontSize: 16 }}>{item.title}</Text>
+            <RadioButton isSelected={item.isSelected} />
           </Pressable>
-          <Button title="Hide" onPress={() => setModalVisible(false)} />
-        </View>
-      </Modal>
+        ))}
+        <Button
+          title="Save"
+          onPress={async () => {
+            await updateUserBook({ bookId: bookId.current, bookType });
+            setModalVisible(false);
+          }}
+        />
+      </SlideMenu>
     </View>
   );
 };
 
 PlannedBooks.propTypes = {
   getPlannedBookList: PropTypes.func.isRequired,
-  addBookToList: PropTypes.func.isRequired,
+  updateUserBook: PropTypes.func.isRequired,
   plannedBookList: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
       title: PropTypes.string,
       coverPath: PropTypes.string,
       rating: PropTypes.number,
+      type: PropTypes.string,
     }),
   ).isRequired,
   shouldReloadPlannedBookList: PropTypes.bool.isRequired,
-  setShouldReloadPlannedBookList: PropTypes.func.isRequired,
 };
 
 export default PlannedBooks;

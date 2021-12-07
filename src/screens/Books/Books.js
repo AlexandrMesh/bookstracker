@@ -45,7 +45,6 @@ const Books = ({
   const [searchText, setSearchText] = useState('');
   const [sortDirection, setSortDirection] = useState(1);
   const [sortType, setSortType] = useState('title');
-  const [isChecked, setIsChecked] = useState(false);
 
   const [searchQuery, handleChangeQuery] = useDebouncedSearch(setSearchText, searchText, 400);
   const bookId = useRef('');
@@ -127,7 +126,7 @@ const Books = ({
           uri: `https://omegaprokat.ru/images/${item.coverPath}`,
         }}
       />
-      <Pressable onPress={() => navigation.navigate('Book', { id: item.id })}>
+      <Pressable onPress={() => navigation.navigate('Book', { id: item.id, title: item.title })}>
         <Text>{item.title}</Text>
       </Pressable>
       <Text>
@@ -165,7 +164,6 @@ const Books = ({
       <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} onChangeText={handleChangeText} value={searchQuery} />
       <Button title="Category" onPress={() => setCategoryModalVisible(true)} />
       <Button title="Filter" onPress={() => setFilterModalVisible(true)} />
-      <CheckBox isChecked={isChecked} onChange={() => setIsChecked(!isChecked)} />
 
       {bookList.length > 0 && (
         <VirtualizedList
@@ -192,8 +190,7 @@ const Books = ({
               <Text>Категория</Text>
               <Pressable
                 onPress={() => (filterCategoryIds.includes('11') ? removeBookCategoryIdFromFilter('11') : addBookCategoryIdToFilter('11'))}
-                style={styles.selectCategory}
-              >
+                style={styles.selectCategory}>
                 <CheckBox
                   isChecked={filterCategoryIds.includes('11')}
                   onChange={() => (filterCategoryIds.includes('11') ? removeBookCategoryIdFromFilter('11') : addBookCategoryIdToFilter('11'))}
@@ -228,8 +225,7 @@ const Books = ({
         title="Добавить в список"
         resetTitle={bookType ? 'Сброс' : ''}
         onReset={() => setBookType('')}
-        onClose={() => setModalVisible(false)}
-      >
+        onClose={() => setModalVisible(false)}>
         {actionTypes.map((item) => (
           <Pressable
             key={item.title}
@@ -244,8 +240,7 @@ const Books = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}
-            onPress={item.action}
-          >
+            onPress={item.action}>
             <Text style={{ fontSize: 16 }}>{item.title}</Text>
             <RadioButton isSelected={item.isSelected} />
           </Pressable>
@@ -275,8 +270,7 @@ const Books = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}
-            onPress={item.action}
-          >
+            onPress={item.action}>
             <Text style={{ fontSize: 16 }}>{item.title}</Text>
             <RadioButton isSelected={item.isSelected} />
           </Pressable>
@@ -297,8 +291,7 @@ const Books = ({
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}
-            onPress={item.action}
-          >
+            onPress={item.action}>
             <Text style={{ fontSize: 16 }}>{item.title}</Text>
             <RadioButton isSelected={item.isSelected} />
           </Pressable>

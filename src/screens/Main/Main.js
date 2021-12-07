@@ -47,7 +47,17 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
     <>
       <NavigationContainer>
         {isSignedIn ? (
-          <RootStack.Navigator>
+          <RootStack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#f4511e',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 16,
+              },
+            }}>
             <RootStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
             <RootStack.Screen name="Book" component={Book} />
           </RootStack.Navigator>
