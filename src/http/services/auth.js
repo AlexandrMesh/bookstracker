@@ -3,6 +3,7 @@ import config from '../../config/api';
 
 const AuthService = () => ({
   signIn: (params) => http.post(`${config.API_URL}/signIn`, params),
+  signUp: (params) => http.post(`${config.API_URL}/signUp`, params),
   checkAuth: (token) => http.get(`${config.API_URL}/checkAuth?token=${token}`),
   resetPassword: (params) => http.post(`${config.API_URL}/resetPassword`, params),
   verifyResetPasswordCode: (params) => http.post(`${config.API_URL}/verifyResetPasswordCode`, params),

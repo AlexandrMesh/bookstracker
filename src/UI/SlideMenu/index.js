@@ -5,11 +5,22 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SlideMenu = ({ isVisible, onClose, onReset, children, title, resetTitle }) => (
   <>
-    {isVisible && <View style={{ backgroundColor: 'black', opacity: 0.5, height: '100%', width: '100%', position: 'absolute', elevation: 5 }} />}
+    <Modal transparent visible={isVisible} onRequestClose={onClose}>
+      <View
+        style={{
+          backgroundColor: 'black',
+          opacity: 0.4,
+          height: '100%',
+          width: '100%',
+          position: 'absolute',
+          elevation: 5,
+        }}
+      />
+    </Modal>
     <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
       <View style={{ display: 'flex', justifyContent: 'flex-end', height: '100%' }}>
         <Pressable onPress={onClose} style={{ height: '100%', width: '100%', position: 'absolute', elevation: 5 }} />
-        <View style={{ backgroundColor: 'white', borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
+        <View style={{ backgroundColor: 'white', elevation: 6, borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
           <View
             style={{
               display: 'flex',

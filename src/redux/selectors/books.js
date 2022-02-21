@@ -1,51 +1,39 @@
-import { path } from 'ramda';
 import { createSelector } from 'reselect';
-import bookListTypes from '../../constants/bookListTypes';
-// TODO: Chaining operator
-export const getBooks = path(['books', 'bookList']);
-export const getPlannedBooks = path(['books', 'plannedBookList']);
-export const getBook = path(['books', 'bookDetails']);
-export const getIsBookDetailsLoading = path(['books', 'isBookDetailsLoading']);
-export const getIsAddBookToListLoading = path(['books', 'isAddBookToListLoading']);
-export const getCustomPlannedBooks = path(['books', 'customPlannedBooks']);
-export const getCustomInProgressBooks = path(['books', 'customInProgressBooks']);
-export const getCustomCompletedBooks = path(['books', 'customCompletedBooks']);
-export const getShouldReloadPlannedBookList = path(['books', 'shouldReloadPlannedBookList']);
-export const getIsPlannedBooksLoading = path(['books', 'isPlannedBooksLoading']);
-export const getIsBooksLoading = path(['books', 'isBooksLoading']);
-export const getFilterBookCategoryIds = path(['books', 'filter', 'categoryIds']);
 
-export const deriveFilterBookCategoryIds = createSelector([getFilterBookCategoryIds], (categoryIds) => categoryIds.join(','));
+const getBooks = (state) => state.books;
+const getSearch = (state) => getBooks(state).search;
+const getBookList = (state) => getBooks(state).bookList;
+const getBookDetails = (state) => getBooks(state).bookDetails;
 
-export const deriveBooks = (bookType) =>
-  createSelector(
-    [getBooks, getPlannedBooks, getCustomPlannedBooks, getCustomInProgressBooks, getCustomCompletedBooks],
-    // eslint-disable-next-line arrow-body-style
-    (books, plannedBooks, customPlannedBooks, customInProgressBooks, customCompletedBooks) => {
-      const bookList = {
-        [bookListTypes.PLANNED]: plannedBooks,
-      };
+export const getBookListStatus = (state) => getBooks(state).bookListStatus;
+export const getSelectedBookId = (state) => getBooks(state).selectedBookId;
+export const getSearchQuery = (state) => getSearch(state).query;
+export const getSearchResults = (state) => getSearch(state).data;
+export const getLoadingSearchResultsStatus = (state) => getSearch(state).loadingDataStatus;
+export const getBookDetailsData = (state) => getBookDetails(state).data;
+export const getLoadingBookDetailsDataStatus = (state) => getBookDetails(state).loadingDataStatus;
+export const getAllBookList = (state) => getBookList(state).all.data;
+export const getLoadingAllBookListStatus = (state) => getBookList(state).all.loadingDataStatus;
+export const getPlannedBookList = (state) => getBookList(state).planned.data;
+export const getLoadingPlannedBookListStatus = (state) => getBookList(state).planned.loadingDataStatus;
+export const getInProgressBookList = (state) => getBookList(state).inProgress.data;
+export const getLoadingInProgressBookListStatus = (state) => getBookList(state).inProgress.loadingDataStatus;
+export const getCompletedBookList = (state) => getBookList(state).completed.data;
+export const getLoadingCompletedBookListStatus = (state) => getBookList(state).completed.loadingDataStatus;
 
-      return (bookList[bookType] || books).map((book) => {
-        const isPlanned = customPlannedBooks.some((customPlannedBook) => book._id === customPlannedBook.id) && bookListTypes.PLANNED;
-        const isInProgress = customInProgressBooks.some((customInProgressBook) => book._id === customInProgressBook.id) && bookListTypes.IN_PROGRESS;
-        const isCompleted = customCompletedBooks.some((customCompleted) => book._id === customCompleted.id) && bookListTypes.COMPLETED;
-        const type = isPlanned || isInProgress || isCompleted;
-        return type ? { ...book, type } : { ...book };
-      });
-    },
-  );
+export const getAllFilterParams = (state) => getBookList(state).all.filterParams;
+export const getAllSortParams = (state) => getBookList(state).all.sortParams;
 
-export const derivePlannedBooks = createSelector(
-  [getPlannedBooks, getCustomPlannedBooks, getCustomInProgressBooks, getCustomCompletedBooks],
-  // eslint-disable-next-line arrow-body-style
-  (books, customPlannedBooks, customInProgressBooks, customCompletedBooks) => {
-    return books.map((book) => {
-      const isPlanned = customPlannedBooks.some((customPlannedBook) => book._id === customPlannedBook.id) && bookListTypes.PLANNED;
-      const isInProgress = customInProgressBooks.some((customInProgressBook) => book._id === customInProgressBook.id) && bookListTypes.IN_PROGRESS;
-      const isCompleted = customCompletedBooks.some((customCompleted) => book._id === customCompleted.id) && bookListTypes.COMPLETED;
-      const type = isPlanned || isInProgress || isCompleted;
-      return type ? { ...book, type } : { ...book };
-    });
-  },
-);
+export const getAllBookCategoryIds = (state) => getBookList(state).all.filterParams.categoryIds;
+
+export const deriveFilterBookCategoryIds = createSelector([getAllBookCategoryIds], (categoryIds) => categoryIds.join(','));
+
+export const deriveSearchQuery = createSelector([getSearchQuery], (query) => query.trim());
+
+export const deriveAllBookList = createSelector([getAllBookList], (bookList) => bookList.map((book) => ({ ...book, bookId: book._id })));
+
+export const derivePlannedBookList = createSelector([getPlannedBookList], (bookList) => bookList.sort((prev, next) => next.added - prev.added));
+
+export const deriveInProgressBookList = createSelector([getInProgressBookList], (bookList) => bookList.sort((prev, next) => next.added - prev.added));
+
+export const deriveCompletedBookList = createSelector([getCompletedBookList], (bookList) => bookList.sort((prev, next) => next.added - prev.added));

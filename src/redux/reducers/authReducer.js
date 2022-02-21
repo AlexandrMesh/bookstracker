@@ -15,17 +15,28 @@ import {
   SET_RESET_PASSWORD_CODE_ERROR,
   SET_RESET_PASSWORD_NEW_PASSWORD,
   SET_RESET_PASSWORD_NEW_PASSWORD_ERROR,
+  CLEAR_PROFILE,
 } from '../actions/authActions';
 
 const initialState = {
-  isSignedIn: false,
-  isGoogleAccount: false,
   profile: {},
-  isLoading: false,
-  isChecked: false,
-  signInErrors: {
-    email: '',
-    password: '',
+  signUp: {
+    isSignedUp: false,
+    isLoading: false,
+    errors: {
+      email: '',
+      password: '',
+    },
+  },
+  signIn: {
+    isSignedIn: false,
+    isGoogleAccount: false,
+    isLoading: false,
+    isChecked: false,
+    errors: {
+      email: '',
+      password: '',
+    },
   },
   resetPassword: {
     isLoading: false,
@@ -47,33 +58,51 @@ const initialState = {
 export default createReducer(initialState, (state, action) => ({
   [SET_IS_SIGNED_IN]: () => ({
     ...state,
-    isSignedIn: action.isSignedIn,
+    signIn: {
+      ...state.signIn,
+      isSignedIn: action.isSignedIn,
+    },
   }),
   [SET_SIGN_IN_LOADING]: () => ({
     ...state,
-    isLoading: action.isLoading,
+    signIn: {
+      ...state.signIn,
+      isLoading: action.isLoading,
+    },
   }),
   [SET_SIGN_IN_ERRORS]: () => ({
     ...state,
-    signInErrors: action.errors,
+    signIn: {
+      ...state.signIn,
+      errors: action.errors,
+    },
   }),
   [SET_SIGN_IN_EMAIL_ERROR]: () => ({
     ...state,
-    signInErrors: {
-      ...state.signInErrors,
-      email: action.error,
+    signIn: {
+      ...state.signIn,
+      errors: {
+        ...state.signIn.errors,
+        email: action.error,
+      },
     },
   }),
   [SET_SIGN_IN_PASSWORD_ERROR]: () => ({
     ...state,
-    signInErrors: {
-      ...state.signInErrors,
-      password: action.error,
+    signIn: {
+      ...state.signIn,
+      errors: {
+        ...state.signIn.errors,
+        password: action.error,
+      },
     },
   }),
   [SET_IS_GOOGLE_ACCOUNT]: () => ({
     ...state,
-    isGoogleAccount: action.isGoogleAccount,
+    signIn: {
+      ...state.signIn,
+      isGoogleAccount: action.isGoogleAccount,
+    },
   }),
   [SET_PROFILE]: () => ({
     ...state,
@@ -81,7 +110,10 @@ export default createReducer(initialState, (state, action) => ({
   }),
   [SET_IS_CHECKED]: () => ({
     ...state,
-    isChecked: action.isChecked,
+    signIn: {
+      ...state.signIn,
+      isChecked: action.isChecked,
+    },
   }),
   [SET_RESET_PASSWORD_LOADING]: () => ({
     ...state,
@@ -149,5 +181,9 @@ export default createReducer(initialState, (state, action) => ({
         error: action.error,
       },
     },
+  }),
+  [CLEAR_PROFILE]: () => ({
+    ...state,
+    profile: {},
   }),
 }));

@@ -1,28 +1,30 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Text } from 'react-native';
+import PropTypes from 'prop-types';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../Splash/Splash';
-import Books from '../Books';
-import Book from '../Book';
-import PlannedBooks from '../PlannedBooks';
+import Home from '../Home';
 import SignIn from '../Auth/SignIn';
+import SignUp from '../Auth/SignUp';
+import Search from '../Search';
+import BookDetails from '../Home/BookDetails';
+import Profile from '../Profile';
+import About from '../Profile/About';
 import ResetPassword from '../Auth/ResetPassword';
 import CodeVerification from '../Auth/ResetPassword/CodeVerification';
 import NewPassword from '../Auth/ResetPassword/NewPassword';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-const RootStack = createStackNavigator();
 
 const Main = ({ checkAuth, isChecked, isSignedIn }) => {
   const checkAuthentication = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      token && (await checkAuth(token));
+      await checkAuth(token);
     } catch (e) {
       console.error(e);
     }
@@ -36,10 +38,32 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
     return <Splash />;
   }
 
-  const HomeTabs = () => (
+  const SearchNavigator = () => (
+    <Stack.Navigator>
+      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
+      <Stack.Screen name="BookDetails" component={BookDetails} />
+    </Stack.Navigator>
+  );
+
+  const HomeNavigator = () => (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+      <Stack.Screen name="BookDetails" component={BookDetails} />
+    </Stack.Navigator>
+  );
+
+  const ProfileNavigator = () => (
+    <Stack.Navigator>
+      <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
+      <Stack.Screen name="About" component={About} />
+    </Stack.Navigator>
+  );
+
+  const Main = () => (
     <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: () => <Text>{route.name}</Text> })}>
-      <Tab.Screen name="Books" component={Books} />
-      <Tab.Screen name="PlannedBooks" component={PlannedBooks} />
+      <Tab.Screen name="Home" component={HomeNavigator} />
+      <Tab.Screen name="Search" component={SearchNavigator} />
+      <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );
 
@@ -47,23 +71,11 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
     <>
       <NavigationContainer>
         {isSignedIn ? (
-          <RootStack.Navigator
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: '#f4511e',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-                fontSize: 16,
-              },
-            }}>
-            <RootStack.Screen name="Home" component={HomeTabs} options={{ headerShown: false }} />
-            <RootStack.Screen name="Book" component={Book} />
-          </RootStack.Navigator>
+          <Main />
         ) : (
           <Stack.Navigator>
             <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
             <Stack.Screen name="CodeVerification" component={CodeVerification} />
             <Stack.Screen name="NewPassword" component={NewPassword} />

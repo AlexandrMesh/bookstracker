@@ -1,0 +1,57 @@
++ 1. Add header
++ 2. Add search bar after clicking on search icon
++ 3. Add user view
++ 4. Add all type book list at the top
++ 5. No results view (search and books)
++ 6. Swipe book types (left - right)
+
+27.01.2022
+name - BookBoard, BookStat
++ remove animation
++ Update list after changing book type
++ Filtering
++ Sorting
++ Home, Search, Account - to the bottom
+
+31.01.2022
+Clear search results after unmount
+
+1.02.2022
++ Book details
+
+2.02.2022
++ Move books flow in book details
+Recover password in Profile screen (in the next version)
+Error handling
+Add bookListType or rename for Search screen and Book details screen
+Sorting by default (by last added book in the list)
+Global refactor (reduce count of components, constants, actions, selectors etc.)
+Think about deriveMappedBookType selector to reduce code base
+
+Подготовить картинку приложения
+Графику
+
+Раздел Все книги - будет в дальнейшем витрина подборок и интересных книг, или советов к прочтению
+
+03.02.2022
+1.Rename bookType -> bookStatus
+bookListType -> bookListStatus
+
+2. userId change to token for requests
+
+08.02.2022
+
+Database structure:
+books - all books
+users_books - users books
+or 
+planned_books
+in_progress_books
+completed_books
+
+{
+  userId: _id,
+  bookId: _id,
+  added: number,
+  bookStatus: string,
+}

@@ -1,6 +1,25 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  bookListStatuses: {
+    width: '100%',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  bookListStatus: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeItem: {
+    borderBottomColor: '#4a89dc',
+    borderBottomWidth: 3,
+  },
   item: {
     backgroundColor: '#f9c2ff',
     justifyContent: 'center',

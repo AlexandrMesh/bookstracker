@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import { checkAuth } from '../../redux/actions/authActions';
-import { isChecked, isSignedIn } from '../../redux/selectors/auth';
+import { getIChecked, getIsSignedIn } from '../../redux/selectors/auth';
 import Main from './Main';
 
 const mapStateToProps = (state) => ({
-  isChecked: isChecked(state),
-  isSignedIn: isSignedIn(state),
+  isChecked: getIChecked(state),
+  isSignedIn: getIsSignedIn(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

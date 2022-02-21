@@ -1,5 +1,5 @@
 const URL = {
-  development: 'http://10.0.75.1:3000',
+  development: 'http://192.168.100.36:3000',
   production: 'https://site.com:3000',
 };
 

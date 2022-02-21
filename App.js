@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { ModalPortal } from 'react-native-modals';
 import { GoogleSignin } from '@react-native-community/google-signin';
 import configureStore from './src/redux/store/configureStore';
 import Main from './src/screens/Main';
@@ -14,7 +13,6 @@ GoogleSignin.configure({
 const App = () => (
   <Provider store={configureStore}>
     <Main />
-    <ModalPortal />
   </Provider>
 );
 

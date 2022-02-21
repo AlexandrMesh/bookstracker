@@ -1,7 +1,6 @@
 import { GoogleSignin } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthService from '../../http/services/auth';
-import { setCustomPlannedBooks, setCustomInProgressBooks, setCustomCompletedBooks } from './booksActions';
 import { getResetPasswordEmail, getResetPasswordCode, getResetPasswordNewPassword } from '../selectors/auth';
 
 const PREFIX = 'AUTH';
@@ -15,6 +14,9 @@ export const SET_SIGN_IN_ERRORS = `${PREFIX}/SET_SIGN_IN_ERRORS`;
 export const SET_SIGN_IN_EMAIL_ERROR = `${PREFIX}/SET_SIGN_IN_EMAIL_ERROR`;
 export const SET_SIGN_IN_PASSWORD_ERROR = `${PREFIX}/SET_SIGN_IN_PASSWORD_ERROR`;
 
+export const SET_SIGN_UP_LOADING = `${PREFIX}/SET_SIGN_UP_LOADING`;
+export const SET_SIGN_UP_ERRORS = `${PREFIX}/SET_SIGN_UP_ERRORS`;
+
 export const SET_RESET_PASSWORD_LOADING = `${PREFIX}/SET_RESET_PASSWORD_LOADING`;
 export const SET_RESET_PASSWORD_EMAIL = `${PREFIX}/SET_RESET_PASSWORD_EMAIL`;
 export const SET_RESET_PASSWORD_EMAIL_ERROR = `${PREFIX}/SET_RESET_PASSWORD_EMAIL_ERROR`;
@@ -22,6 +24,11 @@ export const SET_RESET_PASSWORD_CODE = `${PREFIX}/SET_RESET_PASSWORD_CODE`;
 export const SET_RESET_PASSWORD_CODE_ERROR = `${PREFIX}/SET_RESET_PASSWORD_CODE_ERROR`;
 export const SET_RESET_PASSWORD_NEW_PASSWORD = `${PREFIX}/SET_RESET_PASSWORD_NEW_PASSWORD`;
 export const SET_RESET_PASSWORD_NEW_PASSWORD_ERROR = `${PREFIX}/SET_RESET_PASSWORD_NEW_PASSWORD_ERROR`;
+export const CLEAR_PROFILE = `${PREFIX}/CLEAR_PROFILE`;
+
+export const clearProfile = {
+  type: CLEAR_PROFILE,
+};
 
 export const setResetPasswordLoading = (isLoading) => ({
   type: SET_RESET_PASSWORD_LOADING,
@@ -73,6 +80,11 @@ export const setSignInErrors = (errors) => ({
   errors,
 });
 
+export const setSignUpErrors = (errors) => ({
+  type: SET_SIGN_UP_ERRORS,
+  errors,
+});
+
 export const setSignInEmailError = (error) => ({
   type: SET_SIGN_IN_EMAIL_ERROR,
   error,
@@ -93,6 +105,11 @@ export const setSignInLoading = (isLoading) => ({
   isLoading,
 });
 
+export const setSignUpLoading = (isLoading) => ({
+  type: SET_SIGN_UP_LOADING,
+  isLoading,
+});
+
 export const setProfile = (profile) => ({
   type: SET_PROFILE,
   profile,
@@ -103,11 +120,8 @@ export const checkAuth = (token) => async (dispatch) => {
     const isGoogleSignedIn = await GoogleSignin.isSignedIn();
     const { data } = await AuthService().checkAuth(token);
     if (data.profile) {
-      const { _id, email, customPlannedBooks, customInProgressBooks, customCompletedBooks } = data.profile;
-      dispatch(setProfile({ _id, email }));
-      dispatch(setCustomPlannedBooks(customPlannedBooks));
-      dispatch(setCustomInProgressBooks(customInProgressBooks));
-      dispatch(setCustomCompletedBooks(customCompletedBooks));
+      const { _id, email, registered, updated } = data.profile;
+      dispatch(setProfile({ _id, email, registered, updated }));
       dispatch(setIsSignedIn(true));
       return isGoogleSignedIn && dispatch(setIsGoogleAccount(true));
     }
@@ -166,7 +180,28 @@ export const signIn = ({ email, password, isGoogleAccount }) => async (dispatch)
   return true;
 };
 
-export const signOut = () => async (dispatch) => {
+export const signUp = ({ email, password }) => async (dispatch) => {
+  dispatch(setSignUpLoading(true));
+  try {
+    const { data } = await AuthService().signUp({ email, password });
+    if (data) {
+      dispatch(setIsSignedIn(true));
+      dispatch(setProfile(data.profile));
+      try {
+        await AsyncStorage.setItem('token', data.token);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  } catch (err) {
+    // Set errors into password error
+  } finally {
+    dispatch(setSignUpLoading(false));
+  }
+  return true;
+};
+
+export const signOut = async (dispatch) => {
   dispatch(setSignInLoading(true));
   try {
     const isGoogleSignedIn = await GoogleSignin.isSignedIn();
@@ -180,8 +215,8 @@ export const signOut = () => async (dispatch) => {
   }
   try {
     await AsyncStorage.removeItem('token');
-    dispatch(setProfile({}));
     dispatch(setIsSignedIn(false));
+    dispatch(clearProfile);
   } catch (error) {
     console.log(error);
   } finally {
@@ -198,7 +233,6 @@ export const resetPassword = async (dispatch, getState) => {
     return data.isSent;
   } catch (err) {
     // Set errors into password error
-    console.log(err.response.data);
   } finally {
     dispatch(setResetPasswordLoading(false));
   }

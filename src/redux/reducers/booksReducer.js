@@ -1,152 +1,310 @@
 import createReducer from '../../utils/createReducer';
+import updateIn from '../../utils/updateIn';
+import { ALL } from '../../constants/bookListStatuses';
+import { IDLE, PENDING, SUCCEEDED, FAILED } from '../../constants/loadingStatuses';
 import {
-  BOOKS_LOADED,
+  SET_BOOK_LIST_STATUS,
   BOOK_DETAILS_LOADED,
-  SET_BOOKS_LOADING,
-  SET_BOOK_DETAILS_LOADING,
   CLEAR_BOOK_DETAILS,
-  ADD_TO_CUSTOM_PLANNED_BOOKS,
-  PLANNED_BOOKS_LOADED,
-  IN_PROGRESS_BOOKS_LOADED,
-  COMPLETED_BOOKS_LOADED,
-  SET_CUSTOM_PLANNED_BOOKS,
-  SET_CUSTOM_IN_PROGRESS_BOOKS,
-  SET_CUSTOM_COMPLETED_BOOKS,
-  SET_SHOULD_RELOAD_PLANNED_BOOK_LIST,
-  CLEAR_PLANNED_BOOK_LIST,
-  SET_PLANNED_BOOKS_LOADING,
-  SET_ADD_BOOK_TO_LIST_LOADING,
-  BOOKS_UPDATED,
-  ADD_BOOK_CATEGORY_ID_TO_FILTER,
-  REMOVE_BOOK_CATEGORY_ID_FROM_FILTER,
+  SET_SEARCH_QUERY,
+  START_LOADING_SEARCH_RESULTS,
+  LOADING_SEARCH_RESULTS_FAILED,
+  SEARCH_RESULTS_LOADED,
+  BOOK_LIST_LOADED,
+  START_LOADING_BOOK_LIST,
+  LOADING_BOOK_LIST_FAILED,
+  REMOVE_BOOK,
+  REMOVE_BOOK_EVERYWHERE,
+  ADD_FILTER_VALUE,
+  REMOVE_FILTER_VALUE,
+  SET_SORT_TYPE,
+  SET_SORT_DIRECTION,
+  START_LOADING_BOOK_DETAILS,
+  LOADING_BOOK_DETAILS_FAILED,
+  UPDATE_BOOK,
+  ADD_BOOK,
 } from '../actions/booksActions';
 
 const initialState = {
-  bookList: [],
-  plannedBookList: [],
-  inProgressBookList: [],
-  completedBookList: [],
-  bookDetails: {},
-  customPlannedBooks: [],
-  customInProgressBooks: [],
-  customCompletedBooks: [],
-  filter: {
-    categoryIds: [],
-    sortParams: {},
+  bookListStatus: ALL,
+  bookList: {
+    all: {
+      data: [],
+      loadingDataStatus: IDLE,
+      filterParams: {
+        categoryIds: [],
+      },
+      sortParams: {
+        type: '',
+        direction: '',
+      },
+      totalItems: 0,
+      hasNextPage: false,
+    },
+    planned: {
+      data: [],
+      loadingDataStatus: IDLE,
+      filterParams: {
+        categoryIds: [],
+      },
+      sortParams: {
+        type: '',
+        direction: '',
+      },
+      totalItems: 0,
+      hasNextPage: false,
+    },
+    inProgress: {
+      data: [],
+      loadingDataStatus: IDLE,
+      filterParams: {
+        categoryIds: [],
+      },
+      sortParams: {
+        type: '',
+        direction: '',
+      },
+      totalItems: 0,
+      hasNextPage: false,
+    },
+    completed: {
+      data: [],
+      loadingDataStatus: IDLE,
+      filterParams: {
+        categoryIds: [],
+      },
+      sortParams: {
+        type: '',
+        direction: '',
+      },
+      totalItems: 0,
+      hasNextPage: false,
+    },
   },
-  isBooksLoading: false,
-  isPlannedBooksLoading: false,
-  isInProgressBooksLoading: false,
-  isCompletedBooksLoading: false,
-  isBookDetailsLoading: false,
-  isAddBookToListLoading: false,
-  shouldReloadPlannedBookList: false,
+  search: {
+    data: [],
+    query: '',
+    loadingDataStatus: IDLE,
+  },
+  bookDetails: {
+    data: {},
+    loadingDataStatus: IDLE,
+  },
 };
 
 export default createReducer(initialState, (state, action) => ({
-  [BOOKS_LOADED]: () => ({
+  [SET_BOOK_LIST_STATUS]: () => ({
     ...state,
-    isBooksLoading: false,
-    bookList: [...state.bookList, ...action.bookList],
+    bookListStatus: action.bookListStatus,
   }),
 
-  [BOOKS_UPDATED]: () => ({
+  [UPDATE_BOOK]: () => ({
     ...state,
-    bookList: action.books,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        data: updateIn(state.bookList[action.bookListStatus].data, (book) => book._id === action.bookId, {
+          bookStatus: action.bookStatus,
+          added: action.added,
+        }),
+      },
+    },
   }),
 
-  [SET_PLANNED_BOOKS_LOADING]: () => ({
+  [ADD_BOOK]: () => ({
     ...state,
-    isPlannedBooksLoading: action.isPlannedBooksLoading,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        data: [...state.bookList[action.bookListStatus].data, action.book],
+      },
+    },
   }),
 
-  [PLANNED_BOOKS_LOADED]: () => ({
+  [START_LOADING_BOOK_LIST]: () => ({
     ...state,
-    isPlannedBooksLoading: false,
-    plannedBookList: [...state.plannedBookList, ...action.plannedBookList],
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        loadingDataStatus: PENDING,
+      },
+    },
   }),
 
-  [IN_PROGRESS_BOOKS_LOADED]: () => ({
+  [BOOK_LIST_LOADED]: () => ({
     ...state,
-    isInProgressBooksLoading: false,
-    inProgressBookList: [...state.inProgressBookList, ...action.inProgressBookList],
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        data: action.shouldLoadMoreResults ? [...state.bookList[action.bookListStatus].data, ...action.data] : action.data,
+        totalItems: action.totalItems,
+        hasNextPage: action.hasNextPage,
+        loadingDataStatus: SUCCEEDED,
+      },
+    },
   }),
 
-  [COMPLETED_BOOKS_LOADED]: () => ({
+  [LOADING_BOOK_LIST_FAILED]: () => ({
     ...state,
-    isCompletedBooksLoading: false,
-    completedBookList: [...state.completedBookList, ...action.completedBookList],
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        loadingDataStatus: FAILED,
+      },
+    },
+  }),
+
+  [ADD_FILTER_VALUE]: () => ({
+    ...state,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        filterParams: {
+          ...state.bookList[action.bookListStatus].filterParams,
+          [action.filterParam]: [...state.bookList[action.bookListStatus].filterParams[action.filterParam], action.value],
+        },
+      },
+    },
+  }),
+
+  [REMOVE_FILTER_VALUE]: () => ({
+    ...state,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        filterParams: {
+          ...state.bookList[action.bookListStatus].filterParams,
+          [action.filterParam]: state.bookList[action.bookListStatus].filterParams[action.filterParam].filter((param) => param !== action.value),
+        },
+      },
+    },
+  }),
+
+  [SET_SORT_TYPE]: () => ({
+    ...state,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        sortParams: {
+          ...state.bookList[action.bookListStatus].sortParams,
+          type: action.sortType,
+        },
+      },
+    },
+  }),
+
+  [SET_SORT_DIRECTION]: () => ({
+    ...state,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        sortParams: {
+          ...state.bookList[action.bookListStatus].sortParams,
+          direction: action.sortDirection,
+        },
+      },
+    },
+  }),
+
+  [REMOVE_BOOK]: () => ({
+    ...state,
+    bookList: {
+      ...state.bookList,
+      [action.bookListStatus]: {
+        ...state.bookList[action.bookListStatus],
+        data: state.bookList[action.bookListStatus].data.filter((book) => book.bookId !== action.id),
+      },
+    },
+  }),
+
+  [REMOVE_BOOK_EVERYWHERE]: () => ({
+    ...state,
+    bookList: {
+      ...state.bookList,
+      planned: {
+        ...state.bookList.planned,
+        data: state.bookList.planned.data.filter((book) => book.bookId !== action.id),
+      },
+      inProgress: {
+        ...state.bookList.inProgress,
+        data: state.bookList.inProgress.data.filter((book) => book.bookId !== action.id),
+      },
+      completed: {
+        ...state.bookList.completed,
+        data: state.bookList.completed.data.filter((book) => book.bookId !== action.id),
+      },
+    },
+  }),
+
+  [SEARCH_RESULTS_LOADED]: () => ({
+    ...state,
+    search: {
+      ...state.search,
+      data: action.shouldLoadMoreResults ? [...state.search.data, ...action.data] : action.data,
+      loadingDataStatus: SUCCEEDED,
+    },
+  }),
+
+  [START_LOADING_SEARCH_RESULTS]: () => ({
+    ...state,
+    search: {
+      ...state.search,
+      loadingDataStatus: PENDING,
+    },
+  }),
+
+  [LOADING_SEARCH_RESULTS_FAILED]: () => ({
+    ...state,
+    search: {
+      ...state.search,
+      loadingDataStatus: FAILED,
+    },
+  }),
+
+  [SET_SEARCH_QUERY]: () => ({
+    ...state,
+    search: {
+      ...state.search,
+      query: action.query,
+    },
+  }),
+
+  [START_LOADING_BOOK_DETAILS]: () => ({
+    ...state,
+    bookDetails: {
+      ...state.bookDetails,
+      loadingDataStatus: PENDING,
+    },
   }),
 
   [BOOK_DETAILS_LOADED]: () => ({
     ...state,
-    isBookDetailsLoading: false,
-    bookDetails: action.bookDetails,
+    bookDetails: {
+      ...state.bookDetails,
+      loadingDataStatus: SUCCEEDED,
+      data: action.data,
+    },
   }),
 
-  [SET_BOOKS_LOADING]: () => ({
+  [LOADING_BOOK_DETAILS_FAILED]: () => ({
     ...state,
-    isBooksLoading: action.isBooksLoading,
-  }),
-
-  [SET_BOOK_DETAILS_LOADING]: () => ({
-    ...state,
-    isBookDetailsLoading: action.isBookDetailsLoading,
+    bookDetails: {
+      ...state.bookDetails,
+      loadingDataStatus: FAILED,
+    },
   }),
 
   [CLEAR_BOOK_DETAILS]: () => ({
     ...state,
     bookDetails: initialState.bookDetails,
-  }),
-
-  [ADD_TO_CUSTOM_PLANNED_BOOKS]: () => ({
-    ...state,
-    customPlannedBooks: [...state.customPlannedBooks, action.book],
-  }),
-
-  [SET_CUSTOM_PLANNED_BOOKS]: () => ({
-    ...state,
-    customPlannedBooks: action.customPlannedBooks,
-  }),
-
-  [SET_CUSTOM_IN_PROGRESS_BOOKS]: () => ({
-    ...state,
-    customInProgressBooks: action.customInProgressBooks,
-  }),
-
-  [SET_CUSTOM_COMPLETED_BOOKS]: () => ({
-    ...state,
-    customCompletedBooks: action.customCompletedBooks,
-  }),
-
-  [SET_SHOULD_RELOAD_PLANNED_BOOK_LIST]: () => ({
-    ...state,
-    shouldReloadPlannedBookList: action.shouldReloadPlannedBookList,
-  }),
-
-  [CLEAR_PLANNED_BOOK_LIST]: () => ({
-    ...state,
-    plannedBookList: [],
-  }),
-
-  [SET_ADD_BOOK_TO_LIST_LOADING]: () => ({
-    ...state,
-    isAddBookToListLoading: action.isAddBookToListLoading,
-  }),
-
-  [ADD_BOOK_CATEGORY_ID_TO_FILTER]: () => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      categoryIds: [...state.filter.categoryIds, action.id],
-    },
-  }),
-
-  [REMOVE_BOOK_CATEGORY_ID_FROM_FILTER]: () => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      categoryIds: state.filter.categoryIds.filter((bookId) => action.id !== bookId),
-    },
   }),
 }));

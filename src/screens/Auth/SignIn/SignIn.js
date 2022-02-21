@@ -64,6 +64,7 @@ const SignIn = ({ signIn, signOut, isLoading, errors, setSignInErrors, navigatio
       />
       <Button title="Google Signout" onPress={() => signOut()} />
       <Button title="Reset Password" onPress={() => navigation.navigate('ResetPassword')} />
+      <Button title="Sing up" onPress={() => navigation.navigate('SignUp')} />
       {isLoading && <ActivityIndicator color="blue" />}
     </View>
   );

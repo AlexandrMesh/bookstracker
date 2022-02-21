@@ -7,7 +7,6 @@ const CodeVerification = ({ code, setCode, verifyResetPasswordCode }) => {
     try {
       await verifyResetPasswordCode();
       // navigation.navigate('NewPassword');
-      console.log('SUCCESS');
     } catch (err) {
       console.log(err, 'ERROR');
     }

@@ -1,28 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { View, ScrollView, Text, Pressable, Image } from 'react-native';
-import { isEmpty } from 'ramda';
+import { View, Button, ScrollView, Text, Pressable, Image } from 'react-native';
+import BookTypeSlideMenu from '../BookTypeSlideMenu';
+import { ALL } from '../../../constants/bookListStatuses';
+import { PENDING, IDLE } from '../../../constants/loadingStatuses';
 
-const Book = ({ navigation, route, bookDetails, getBookDetails, isBookDetailsLoading, clearBookDetails }) => {
-  const { id, title } = route.params;
+const getDescription = (annotation) => `${annotation.slice(0, 200)}...`;
 
-  const getDescription = () => {
-    const description = bookDetails.annotation;
-    if (description.length > 200) {
-      return `${bookDetails.annotation.slice(0, 200)}...`;
-    }
-    return false;
-  };
+const BookDetails = ({ navigation, route, bookDetails, loadBookDetails, loadingDataStatus, clearBookDetails, updateUserBook }) => {
+  const [slideMenuVisibility, setSlideMenuVisibility] = useState(false);
+  const { bookId } = route.params;
+
+  const hideSlideMenu = () => setSlideMenuVisibility(false);
+
+  const showSlideMenu = () => setSlideMenuVisibility(true);
 
   useEffect(() => {
-    navigation.setOptions({ title });
-    getBookDetails({ id });
+    loadBookDetails({ bookId });
     return () => clearBookDetails();
   }, []);
 
-  console.log(isBookDetailsLoading, 'isBookDetailsLoading');
-
-  return !isBookDetailsLoading && !isEmpty(bookDetails) ? (
+  return loadingDataStatus === PENDING || loadingDataStatus === IDLE ? (
+    <View>
+      <Text>Loading</Text>
+    </View>
+  ) : (
     <ScrollView>
       <View style={{ padding: 15 }}>
         <Image
@@ -34,6 +36,7 @@ const Book = ({ navigation, route, bookDetails, getBookDetails, isBookDetailsLoa
             uri: `https://omegaprokat.ru/images/${bookDetails.coverPath}`,
           }}
         />
+        <Button title={bookDetails.status || 'to read'} onPress={showSlideMenu} />
         <Pressable onPress={() => navigation.setOptions({ title: 'Updated! as dasd asd asdasdasdasd asd asd asd asdasdasdasd' })}>
           <Text>Book screen</Text>
           <Text>
@@ -66,25 +69,30 @@ const Book = ({ navigation, route, bookDetails, getBookDetails, isBookDetailsLoa
           </Text>
           <Text>
             Описание:
-            {getDescription()}
+            {getDescription(bookDetails.annotation)}
           </Text>
         </Pressable>
       </View>
+      <BookTypeSlideMenu
+        bookId={bookId}
+        bookStatus={bookDetails.status}
+        updateUserBook={updateUserBook}
+        isVisible={slideMenuVisibility}
+        bookListStatus={ALL}
+        onClose={hideSlideMenu}
+      />
     </ScrollView>
-  ) : (
-    <View>
-      <Text>Loading</Text>
-    </View>
   );
 };
 
-Book.propTypes = {
+BookDetails.propTypes = {
   route: PropTypes.shape({
     params: {
       id: PropTypes.string,
     },
   }).isRequired,
   bookDetails: PropTypes.shape({
+    status: PropTypes.string,
     title: PropTypes.string,
     coverPath: PropTypes.string,
     rating: PropTypes.number,
@@ -95,9 +103,10 @@ Book.propTypes = {
     year: PropTypes.number,
     annotation: PropTypes.string,
   }).isRequired,
-  getBookDetails: PropTypes.func.isRequired,
-  isBookDetailsLoading: PropTypes.bool.isRequired,
+  loadBookDetails: PropTypes.func.isRequired,
+  loadingDataStatus: PropTypes.string.isRequired,
   clearBookDetails: PropTypes.func.isRequired,
+  updateUserBook: PropTypes.func.isRequired,
 };
 
-export default Book;
+export default BookDetails;

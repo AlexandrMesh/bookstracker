@@ -29,4 +29,9 @@ module.exports = {
     'max-len': ['error', { code: 150 }],
     'no-unused-expressions': ['error', { allowShortCircuit: true }],
   },
+  settings: {
+    'import/resolver': {
+      'babel-module': {},
+    },
+  },
 };
