@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Platform, LayoutAnimation, UIManager, View, Text, Button, VirtualizedList, Image, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import BookTypeSlideMenu from '../BookTypeSlideMenu';
+import BookStatusSlideMenu from '../BookStatusSlideMenu';
 import styles from './styles';
 
 const layoutAnimConfig = {
@@ -21,7 +21,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookListStatus, filterParams, sortParams, removeBook }) => {
+const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookListStatus, filterParams, sortParams, removeBook, hasNextPage }) => {
   const navigation = useNavigation();
   const [slideMenuVisibility, setSlideMenuVisibility] = useState(false);
   const [selectedBook, setSelectedBook] = useState({});
@@ -95,9 +95,9 @@ const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookList
           getItem={getItem}
           data={bookList}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.bookId}
           onEndReached={() => {
-            if (bookList.length > 4) {
+            if (bookList.length > 4 && hasNextPage) {
               bookPage.current += 1;
               loadBookList(
                 {
@@ -115,7 +115,7 @@ const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookList
           onEndReachedThreshold={0.5}
         />
       )}
-      <BookTypeSlideMenu
+      <BookStatusSlideMenu
         book={selectedBook}
         updateUserBook={updateUserBook}
         isVisible={slideMenuVisibility}
@@ -148,6 +148,7 @@ BookList.propTypes = {
   bookListStatus: PropTypes.string.isRequired,
   filterParams: PropTypes.string.isRequired,
   removeBook: PropTypes.func.isRequired,
+  hasNextPage: PropTypes.bool.isRequired,
 };
 
 export default BookList;

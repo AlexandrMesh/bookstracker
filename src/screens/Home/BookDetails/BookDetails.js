@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { View, Button, ScrollView, Text, Pressable, Image } from 'react-native';
-import BookTypeSlideMenu from '../BookTypeSlideMenu';
+import BookStatusSlideMenu from '../BookStatusSlideMenu';
 import { ALL } from '../../../constants/bookListStatuses';
 import { PENDING, IDLE } from '../../../constants/loadingStatuses';
 
@@ -73,7 +73,7 @@ const BookDetails = ({ navigation, route, bookDetails, loadBookDetails, loadingD
           </Text>
         </Pressable>
       </View>
-      <BookTypeSlideMenu
+      <BookStatusSlideMenu
         bookId={bookId}
         bookStatus={bookDetails.status}
         updateUserBook={updateUserBook}

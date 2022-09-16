@@ -85,6 +85,8 @@ const initialState = {
     data: [],
     query: '',
     loadingDataStatus: IDLE,
+    totalItems: 0,
+    hasNextPage: false,
   },
   bookDetails: {
     data: {},
@@ -250,6 +252,8 @@ export default createReducer(initialState, (state, action) => ({
     search: {
       ...state.search,
       data: action.shouldLoadMoreResults ? [...state.search.data, ...action.data] : action.data,
+      totalItems: action.totalItems,
+      hasNextPage: action.hasNextPage,
       loadingDataStatus: SUCCEEDED,
     },
   }),

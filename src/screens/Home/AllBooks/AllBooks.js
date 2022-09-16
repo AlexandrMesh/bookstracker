@@ -17,6 +17,7 @@ const renderContent = (
   sortingVisibility,
   setSortingVisibility,
   sortParams,
+  hasNextPage,
 ) => {
   if (loadingDataStatus === IDLE || loadingDataStatus === PENDING) {
     return <ActivityIndicator color="blue" size="large" />;
@@ -30,7 +31,14 @@ const renderContent = (
         <Pressable onPress={() => setSortingVisibility(true)}>
           <Text>Сортировка</Text>
         </Pressable>
-        <BooksList loadBookList={loadBookList} bookListStatus={ALL} bookList={bookList} filterParams={filterParams} sortParams={sortParams} />
+        <BooksList
+          loadBookList={loadBookList}
+          bookListStatus={ALL}
+          bookList={bookList}
+          filterParams={filterParams}
+          sortParams={sortParams}
+          hasNextPage={hasNextPage}
+        />
         <Filter isVisible={isFilterVisible} bookListStatus={ALL} onClose={() => setIsFilterVIsible(false)} filterParams={filterParams} />
         <Sorting isVisible={sortingVisibility} bookListStatus={ALL} onClose={() => setSortingVisibility(false)} sortParams={sortParams} />
       </>
@@ -42,7 +50,7 @@ const renderContent = (
   return undefined;
 };
 
-const AllBooks = ({ loadingDataStatus, loadBookList, bookList, filterParams, sortParams }) => {
+const AllBooks = ({ loadingDataStatus, loadBookList, bookList, filterParams, sortParams, hasNextPage }) => {
   const [isFilterVisible, setIsFilterVIsible] = useState(false);
   const [sortingVisibility, setSortingVisibility] = useState(false);
 
@@ -68,6 +76,7 @@ const AllBooks = ({ loadingDataStatus, loadBookList, bookList, filterParams, sor
     sortingVisibility,
     setSortingVisibility,
     sortParams,
+    hasNextPage,
   );
 };
 
@@ -84,6 +93,7 @@ AllBooks.propTypes = {
       type: PropTypes.string,
     }),
   ).isRequired,
+  hasNextPage: PropTypes.bool.isRequired,
 };
 
 export default AllBooks;

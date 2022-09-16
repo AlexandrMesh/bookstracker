@@ -124,19 +124,22 @@ export const setSearchQuery = (query) => (dispatch) => {
   dispatch(startLoadingSearchResults);
 };
 
-export const searchResultsLoaded = (data, shouldLoadMoreResults) => ({
+export const searchResultsLoaded = (bookListStatus, data, totalItems, hasNextPage, shouldLoadMoreResults) => ({
   type: SEARCH_RESULTS_LOADED,
+  bookListStatus,
   data,
+  totalItems,
+  hasNextPage,
   shouldLoadMoreResults,
 });
 
-export const bookListLoaded = (bookListStatus, data, totalItems, hasNexPage, shouldLoadMoreResults) => ({
+export const bookListLoaded = (bookListStatus, data = [], totalItems = 0, hasNextPage = false, shouldLoadMoreResults) => ({
   type: BOOK_LIST_LOADED,
   bookListStatus,
   data,
-  shouldLoadMoreResults,
   totalItems,
-  hasNexPage,
+  hasNextPage,
+  shouldLoadMoreResults,
 });
 
 export const startLoadingBookList = (bookListStatus) => ({
@@ -171,8 +174,17 @@ export const loadSearchResults = (params, shouldLoadMoreResults) => async (dispa
   const userId = getUserId(state);
   try {
     const { data } = (await DataService().getBookList({ ...params, userId })) || [];
-    dispatch(searchResultsLoaded(data, shouldLoadMoreResults));
+    dispatch(
+      searchResultsLoaded(
+        params.bookListStatus,
+        data.items,
+        (data.pagination || {}).totalItems,
+        (data.pagination || {}).hasNextPage,
+        shouldLoadMoreResults,
+      ),
+    );
   } catch (e) {
+    console.log(e, 'e');
     dispatch(loadingSearchResultsFailed);
   }
 };
@@ -181,9 +193,19 @@ export const loadBookList = (params, shouldLoadMoreResults) => async (dispatch, 
   const state = getState();
   const userId = getUserId(state);
   try {
-    const { data } = (await DataService().getBookList({ ...params, userId })) || [];
-    dispatch(bookListLoaded(params.bookListStatus, data.items, data.pagination.totalItems, data.pagination.hasNextPage, shouldLoadMoreResults));
+    const { data } = (await DataService().getBookList({ ...params, userId })) || {};
+    console.log(data, 'data');
+    dispatch(
+      bookListLoaded(
+        params.bookListStatus,
+        data.items,
+        (data.pagination || {}).totalItems,
+        (data.pagination || {}).hasNextPage,
+        shouldLoadMoreResults,
+      ),
+    );
   } catch (e) {
+    console.log(e, 'e');
     dispatch(loadingBookListFailed(params.bookListStatus));
   }
 };
@@ -196,6 +218,7 @@ export const loadBookDetails = (params) => async (dispatch, getState) => {
     const bookDetails = (await DataService().getBookDetails({ ...params, userId })) || {};
     dispatch(bookDetailsLoaded(bookDetails.data));
   } catch (e) {
+    console.log(e, 'e');
     dispatch(loadingBookDetailsFailed);
   }
 };

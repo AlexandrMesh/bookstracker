@@ -6,7 +6,7 @@ import { IDLE, PENDING } from '../../../constants/loadingStatuses';
 import { ALL } from '../../../constants/bookListStatuses';
 import BooksList from '../../Home/BooksList';
 
-const renderSearchResults = (loadingDataStatus, searchQuery, loadSearchResults, searchResult) => {
+const renderSearchResults = (loadingDataStatus, searchQuery, loadSearchResults, searchResult, hasNextPage) => {
   if (isEmpty(searchQuery)) {
     return <Text>Try to search</Text>;
   }
@@ -14,7 +14,9 @@ const renderSearchResults = (loadingDataStatus, searchQuery, loadSearchResults, 
     return <ActivityIndicator color="blue" size="large" />;
   }
   if (searchResult.length > 0) {
-    return <BooksList searchText={searchQuery} bookListStatus={ALL} loadBookList={loadSearchResults} bookList={searchResult} />;
+    return (
+      <BooksList searchText={searchQuery} bookListStatus={ALL} loadBookList={loadSearchResults} bookList={searchResult} hasNextPage={hasNextPage} />
+    );
   }
   if (searchResult.length === 0) {
     return <Text>No results</Text>;
@@ -22,10 +24,10 @@ const renderSearchResults = (loadingDataStatus, searchQuery, loadSearchResults, 
   return undefined;
 };
 
-const SearchResults = ({ loadingDataStatus, searchQuery, loadSearchResults, searchResult }) => {
+const SearchResults = ({ loadingDataStatus, searchQuery, loadSearchResults, searchResult, hasNextPage }) => {
   useEffect(() => {
     if (!isEmpty(searchQuery)) {
-      loadSearchResults({ title: searchQuery, page: 0 });
+      loadSearchResults({ title: searchQuery, bookListStatus: ALL, page: 0 });
     }
   }, [searchQuery]);
 
@@ -34,7 +36,7 @@ const SearchResults = ({ loadingDataStatus, searchQuery, loadSearchResults, sear
     return () => console.log('unmount');
   }, []);
 
-  return renderSearchResults(loadingDataStatus, searchQuery, loadSearchResults, searchResult);
+  return renderSearchResults(loadingDataStatus, searchQuery, loadSearchResults, searchResult, hasNextPage);
 };
 
 SearchResults.propTypes = {

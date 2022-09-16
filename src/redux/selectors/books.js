@@ -10,6 +10,7 @@ export const getSelectedBookId = (state) => getBooks(state).selectedBookId;
 export const getSearchQuery = (state) => getSearch(state).query;
 export const getSearchResults = (state) => getSearch(state).data;
 export const getLoadingSearchResultsStatus = (state) => getSearch(state).loadingDataStatus;
+export const getSearchResultsHasNextPage = (state) => getSearch(state).hasNextPage;
 export const getBookDetailsData = (state) => getBookDetails(state).data;
 export const getLoadingBookDetailsDataStatus = (state) => getBookDetails(state).loadingDataStatus;
 export const getAllBookList = (state) => getBookList(state).all.data;
@@ -20,6 +21,14 @@ export const getInProgressBookList = (state) => getBookList(state).inProgress.da
 export const getLoadingInProgressBookListStatus = (state) => getBookList(state).inProgress.loadingDataStatus;
 export const getCompletedBookList = (state) => getBookList(state).completed.data;
 export const getLoadingCompletedBookListStatus = (state) => getBookList(state).completed.loadingDataStatus;
+export const getAllBookListTotalItems = (state) => getBookList(state).all.totalItems;
+export const getAllBookListHasNextPage = (state) => getBookList(state).all.hasNextPage;
+export const getPlannedBookListTotalItems = (state) => getBookList(state).planned.totalItems;
+export const getPlannedBookListHasNextPage = (state) => getBookList(state).planned.hasNextPage;
+export const getInProgressBookListTotalItems = (state) => getBookList(state).inProgress.totalItems;
+export const getInProgressBookListHasNextPage = (state) => getBookList(state).inProgress.hasNextPage;
+export const getCompletedBookListTotalItems = (state) => getBookList(state).completed.totalItems;
+export const getCompletedBookListHasNextPage = (state) => getBookList(state).completed.hasNextPage;
 
 export const getAllFilterParams = (state) => getBookList(state).all.filterParams;
 export const getAllSortParams = (state) => getBookList(state).all.sortParams;

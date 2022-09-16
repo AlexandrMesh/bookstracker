@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
-import { deriveCompletedBookList, getLoadingCompletedBookListStatus } from '../../../redux/selectors/books';
+import { deriveCompletedBookList, getCompletedBookListHasNextPage, getLoadingCompletedBookListStatus } from '../../../redux/selectors/books';
 import { loadBookList } from '../../../redux/actions/booksActions';
 import CompletedBooks from './CompletedBooks';
 
 const mapStateToProps = (state) => ({
   bookList: deriveCompletedBookList(state),
   loadingDataStatus: getLoadingCompletedBookListStatus(state),
+  hasNextPage: getCompletedBookListHasNextPage(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

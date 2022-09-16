@@ -16,7 +16,7 @@ const layoutAnimConfig = {
   },
 };
 
-const BookTypeSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookListStatus }) => {
+const BookStatusSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookListStatus }) => {
   const [bookStatusValue, setBookStatusValue] = useState(book.bookStatus);
 
   const actionTypes = [
@@ -73,7 +73,7 @@ const BookTypeSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookListS
   );
 };
 
-BookTypeSlideMenu.propTypes = {
+BookStatusSlideMenu.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   book: PropTypes.shape({
     bookId: PropTypes.string,
@@ -84,4 +84,4 @@ BookTypeSlideMenu.propTypes = {
   bookListStatus: PropTypes.string.isRequired,
 };
 
-export default BookTypeSlideMenu;
+export default BookStatusSlideMenu;
