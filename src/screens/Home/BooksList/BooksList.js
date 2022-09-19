@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { Platform, LayoutAnimation, UIManager, View, Text, Button, VirtualizedList, Image, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BookStatusSlideMenu from '../BookStatusSlideMenu';
@@ -22,6 +23,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 
 const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookListStatus, filterParams, sortParams, removeBook, hasNextPage }) => {
+  const { t } = useTranslation('general');
   const navigation = useNavigation();
   const [slideMenuVisibility, setSlideMenuVisibility] = useState(false);
   const [selectedBook, setSelectedBook] = useState({});
@@ -66,6 +68,7 @@ const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookList
         Добавлено:
         {item.added}
       </Text>
+      <Text>{t('hello')}</Text>
 
       <Button
         title='remove'

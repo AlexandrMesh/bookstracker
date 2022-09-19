@@ -77,7 +77,7 @@ export const getLoadingBookListStatus = (state, status) => getBookList(state).[s
 + Переделать endpoint getBook, надо искать теперь в таблице userBooks
 
 19.09.2022
-Добавить i18n
++ Добавить i18n
 Спиннер для Slider menu
 Продумать минимальную структуру для всех страниц
 Обновить версию react native
