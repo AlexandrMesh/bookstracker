@@ -23,7 +23,7 @@ const Sorting = ({ isVisible, sortParams, setSortDirection, setSortType, onClose
   };
 
   return (
-    <SlideMenu isVisible={isVisible} title="Сортировать" onClose={onClose}>
+    <SlideMenu isVisible={isVisible} title='Сортировать' onClose={onClose}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 15, marginBottom: 5 }}>Направление:</Text>
       {sortDirections.map((item) => (
         <Pressable
@@ -67,7 +67,7 @@ const Sorting = ({ isVisible, sortParams, setSortDirection, setSortType, onClose
           <RadioButton isSelected={item.isSelected} />
         </Pressable>
       ))}
-      <Button title="Sort" onPress={handleSort} />
+      <Button title='Sort' onPress={handleSort} />
     </SlideMenu>
   );
 };

@@ -20,10 +20,10 @@ const HeaderTabs = () => (
       indicatorStyle: { height: 4 },
     }}
   >
-    <Tab.Screen name="AllBooks" component={AllBooks} options={{ tabBarLabel: () => renderLabel('Все книги') }} />
-    <Tab.Screen name="PlannedBooks" component={PlannedBooks} options={{ tabBarLabel: () => renderLabel('Буду читать') }} />
-    <Tab.Screen name="InProgressBooks" component={InProgressBooks} options={{ tabBarLabel: () => renderLabel('Читаю') }} />
-    <Tab.Screen name="CompletedBooks" component={CompletedBooks} options={{ tabBarLabel: () => renderLabel('Прочитано') }} />
+    <Tab.Screen name='AllBooks' component={AllBooks} options={{ tabBarLabel: () => renderLabel('Все книги') }} />
+    <Tab.Screen name='PlannedBooks' component={PlannedBooks} options={{ tabBarLabel: () => renderLabel('Буду читать') }} />
+    <Tab.Screen name='InProgressBooks' component={InProgressBooks} options={{ tabBarLabel: () => renderLabel('Читаю') }} />
+    <Tab.Screen name='CompletedBooks' component={CompletedBooks} options={{ tabBarLabel: () => renderLabel('Прочитано') }} />
   </Tab.Navigator>
 );
 

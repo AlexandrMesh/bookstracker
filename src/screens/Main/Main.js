@@ -40,30 +40,31 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
 
   const SearchNavigator = () => (
     <Stack.Navigator>
-      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
-      <Stack.Screen name="BookDetails" component={BookDetails} />
+      <Stack.Screen name='Search' component={Search} options={{ headerShown: false }} />
+      <Stack.Screen name='BookDetails' component={BookDetails} />
     </Stack.Navigator>
   );
 
   const HomeNavigator = () => (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      <Stack.Screen name="BookDetails" component={BookDetails} />
+      <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
+      <Stack.Screen name='BookDetails' component={BookDetails} />
     </Stack.Navigator>
   );
 
   const ProfileNavigator = () => (
     <Stack.Navigator>
-      <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-      <Stack.Screen name="About" component={About} />
+      <Stack.Screen name='Profile' component={Profile} options={{ headerShown: false }} />
+      <Stack.Screen name='About' component={About} />
     </Stack.Navigator>
   );
 
   const Main = () => (
+    // eslint-disable-next-line react/display-name
     <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: () => <Text>{route.name}</Text> })}>
-      <Tab.Screen name="Home" component={HomeNavigator} />
-      <Tab.Screen name="Search" component={SearchNavigator} />
-      <Tab.Screen name="Profile" component={ProfileNavigator} />
+      <Tab.Screen name='Home' component={HomeNavigator} />
+      <Tab.Screen name='Search' component={SearchNavigator} />
+      <Tab.Screen name='Profile' component={ProfileNavigator} />
     </Tab.Navigator>
   );
 
@@ -74,11 +75,11 @@ const Main = ({ checkAuth, isChecked, isSignedIn }) => {
           <Main />
         ) : (
           <Stack.Navigator>
-            <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="ResetPassword" component={ResetPassword} />
-            <Stack.Screen name="CodeVerification" component={CodeVerification} />
-            <Stack.Screen name="NewPassword" component={NewPassword} />
+            <Stack.Screen name='SignIn' component={SignIn} />
+            <Stack.Screen name='SignUp' component={SignUp} />
+            <Stack.Screen name='ResetPassword' component={ResetPassword} />
+            <Stack.Screen name='CodeVerification' component={CodeVerification} />
+            <Stack.Screen name='NewPassword' component={NewPassword} />
           </Stack.Navigator>
         )}
       </NavigationContainer>

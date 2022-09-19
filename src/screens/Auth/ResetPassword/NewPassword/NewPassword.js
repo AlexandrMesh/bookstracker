@@ -6,7 +6,7 @@ const NewPassword = ({ newPassword, setNewPassword, navigation }) => (
   <>
     <Text>New Password</Text>
     <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} onChangeText={setNewPassword} value={newPassword} />
-    <Button title="Send" onPress={() => navigation.navigate('ResetPassword')} />
+    <Button title='Send' onPress={() => navigation.navigate('ResetPassword')} />
   </>
 );
 

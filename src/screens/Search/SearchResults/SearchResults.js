@@ -11,7 +11,7 @@ const renderSearchResults = (loadingDataStatus, searchQuery, loadSearchResults, 
     return <Text>Try to search</Text>;
   }
   if (loadingDataStatus === IDLE || loadingDataStatus === PENDING) {
-    return <ActivityIndicator color="blue" size="large" />;
+    return <ActivityIndicator color='blue' size='large' />;
   }
   if (searchResult.length > 0) {
     return (

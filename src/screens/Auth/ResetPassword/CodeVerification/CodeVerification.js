@@ -18,11 +18,11 @@ const CodeVerification = ({ code, setCode, verifyResetPasswordCode }) => {
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
         maxLength={6}
-        keyboardType="numeric"
+        keyboardType='numeric'
         onChangeText={setCode}
         value={code}
       />
-      <Button title="Send" onPress={handleVerify} />
+      <Button title='Send' onPress={handleVerify} />
     </>
   );
 };

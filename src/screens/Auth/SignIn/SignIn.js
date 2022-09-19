@@ -55,17 +55,17 @@ const SignIn = ({ signIn, signOut, isLoading, errors, setSignInErrors, navigatio
       {!isEmpty(errors.email) && <Text>{errors.email}</Text>}
       <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} onChangeText={(text) => handleSetPassword(text)} value={password} />
       {!isEmpty(errors.password) && <Text>{errors.password}</Text>}
-      <Button title="Sing in" onPress={() => isValid() && signIn({ email, password })} />
+      <Button title='Sing in' onPress={() => isValid() && signIn({ email, password })} />
       <Button
-        title="Google Signin"
+        title='Google Signin'
         onPress={() => {
           signIn({ email, password, isGoogleAccount: true });
         }}
       />
-      <Button title="Google Signout" onPress={() => signOut()} />
-      <Button title="Reset Password" onPress={() => navigation.navigate('ResetPassword')} />
-      <Button title="Sing up" onPress={() => navigation.navigate('SignUp')} />
-      {isLoading && <ActivityIndicator color="blue" />}
+      <Button title='Google Signout' onPress={() => signOut()} />
+      <Button title='Reset Password' onPress={() => navigation.navigate('ResetPassword')} />
+      <Button title='Sing up' onPress={() => navigation.navigate('SignUp')} />
+      {isLoading && <ActivityIndicator color='blue' />}
     </View>
   );
 };

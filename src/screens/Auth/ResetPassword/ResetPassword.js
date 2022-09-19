@@ -17,7 +17,7 @@ const ResetPassword = ({ email, setEmail, resetPassword }) => {
     <>
       <Text>Reset Password</Text>
       <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} onChangeText={setEmail} value={email} />
-      <Button title="Reset Password" onPress={handleResetPassword} />
+      <Button title='Reset Password' onPress={handleResetPassword} />
     </>
   );
 };

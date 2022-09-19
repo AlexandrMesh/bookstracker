@@ -7,7 +7,7 @@ import BooksList from '../BooksList';
 
 const renderContent = (loadingDataStatus, loadBookList, bookList, hasNextPage) => {
   if (loadingDataStatus === IDLE || loadingDataStatus === PENDING) {
-    return <ActivityIndicator color="blue" size="large" />;
+    return <ActivityIndicator color='blue' size='large' />;
   }
   if (bookList.length > 0) {
     return <BooksList loadBookList={loadBookList} bookList={bookList} bookListStatus={PLANNED} hasNextPage={hasNextPage} />;

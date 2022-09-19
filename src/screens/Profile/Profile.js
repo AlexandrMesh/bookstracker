@@ -21,7 +21,7 @@ const Profile = ({ email, signOut }) => {
         <Pressable onPress={() => navigation.navigate('About')}>
           <Text>О приложении</Text>
         </Pressable>
-        <Button title="Signout" onPress={signOut} />
+        <Button title='Signout' onPress={signOut} />
       </View>
     </View>
   );

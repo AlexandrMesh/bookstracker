@@ -20,7 +20,7 @@ const renderContent = (
   hasNextPage,
 ) => {
   if (loadingDataStatus === IDLE || loadingDataStatus === PENDING) {
-    return <ActivityIndicator color="blue" size="large" />;
+    return <ActivityIndicator color='blue' size='large' />;
   }
   if (bookList.length > 0) {
     return (

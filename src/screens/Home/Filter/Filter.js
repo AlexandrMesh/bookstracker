@@ -26,7 +26,7 @@ const Filter = ({ isVisible, filterParams, addFilterValue, removeFilterValue, on
   };
 
   return (
-    <SlideMenu isVisible={isVisible} title="Фильтры" onClose={onClose}>
+    <SlideMenu isVisible={isVisible} title='Фильтры' onClose={onClose}>
       {actionTypes.map((item) => (
         <Pressable
           key={item.title}
@@ -53,7 +53,7 @@ const Filter = ({ isVisible, filterParams, addFilterValue, removeFilterValue, on
           <CheckBox isChecked={filterParams.categoryIds.includes(item.id)} />
         </Pressable>
       ))}
-      <Button title="Filter" onPress={handleFilter} />
+      <Button title='Filter' onPress={handleFilter} />
     </SlideMenu>
   );
 };

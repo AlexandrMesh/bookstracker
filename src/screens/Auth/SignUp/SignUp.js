@@ -55,8 +55,8 @@ const SignUp = ({ signUp, isLoading, errors, setSignUpErrors }) => {
       {!isEmpty(errors.email) && <Text>{errors.email}</Text>}
       <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} onChangeText={(text) => handleSetPassword(text)} value={password} />
       {!isEmpty(errors.password) && <Text>{errors.password}</Text>}
-      <Button title="Sign Up" onPress={() => isValid() && signUp({ email, password })} />
-      {isLoading && <ActivityIndicator color="blue" />}
+      <Button title='Sign Up' onPress={() => isValid() && signUp({ email, password })} />
+      {isLoading && <ActivityIndicator color='blue' />}
     </View>
   );
 };

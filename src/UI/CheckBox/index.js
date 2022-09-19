@@ -17,7 +17,7 @@ const CheckBox = ({ isChecked, onChange }) => (
       borderWidth: 3,
     }}
   >
-    {isChecked && <Icon name="done" size={18} color="white" />}
+    {isChecked && <Icon name='done' size={18} color='white' />}
   </Pressable>
 );
 
