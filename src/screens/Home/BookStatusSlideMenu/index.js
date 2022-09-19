@@ -16,8 +16,8 @@ const layoutAnimConfig = {
   },
 };
 
-const BookStatusSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookListStatus }) => {
-  const [bookStatusValue, setBookStatusValue] = useState(book.bookStatus);
+const BookStatusSlideMenu = ({ isVisible, bookId, book, updateUserBook, onClose, bookListStatus, isCalledFromDetails }) => {
+  const [bookStatusValue, setBookStatusValue] = useState(book.status);
 
   const actionTypes = [
     { title: 'Хочу прочитать', isSelected: bookStatusValue === PLANNED, action: () => setBookStatusValue(PLANNED) },
@@ -26,14 +26,14 @@ const BookStatusSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookLis
   ];
 
   useEffect(() => {
-    setBookStatusValue(book.bookStatus);
+    setBookStatusValue(book.status);
     if (!isVisible) {
-      setBookStatusValue(book.bookStatus);
+      setBookStatusValue(book.status);
     }
-  }, [book.bookStatus, isVisible]);
+  }, [book.status, isVisible]);
 
   const handleUpdate = async () => {
-    await updateUserBook({ book, bookStatus: bookStatusValue, bookListStatus });
+    await updateUserBook({ bookId, bookStatus: bookStatusValue, bookListStatus, isCalledFromDetails });
     onClose();
     if (bookListStatus !== ALL) {
       LayoutAnimation.configureNext(layoutAnimConfig);
@@ -43,7 +43,7 @@ const BookStatusSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookLis
   return (
     <SlideMenu
       isVisible={isVisible}
-      title="Добавить в список"
+      title='Добавить в список'
       resetTitle={bookStatusValue ? 'Сброс' : ''}
       onReset={() => setBookStatusValue(ALL)}
       onClose={() => onClose()}
@@ -68,7 +68,7 @@ const BookStatusSlideMenu = ({ isVisible, book, updateUserBook, onClose, bookLis
           <RadioButton isSelected={item.isSelected} />
         </Pressable>
       ))}
-      <Button title="Save" onPress={handleUpdate} />
+      <Button title='Save' onPress={handleUpdate} />
     </SlideMenu>
   );
 };
@@ -77,11 +77,13 @@ BookStatusSlideMenu.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   book: PropTypes.shape({
     bookId: PropTypes.string,
-    bookStatus: PropTypes.string,
+    status: PropTypes.string,
   }).isRequired,
+  bookId: PropTypes.string.isRequired,
   updateUserBook: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   bookListStatus: PropTypes.string.isRequired,
+  isCalledFromDetails: PropTypes.bool.isRequired,
 };
 
 export default BookStatusSlideMenu;

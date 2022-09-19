@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
     jest: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb'],
+  extends: ['airbnb', 'plugin:prettier/recommended', 'plugin:react/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -28,6 +28,12 @@ module.exports = {
     'linebreak-style': 0,
     'max-len': ['error', { code: 150 }],
     'no-unused-expressions': ['error', { allowShortCircuit: true }],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
   settings: {
     'import/resolver': {

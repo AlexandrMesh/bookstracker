@@ -4,7 +4,6 @@ import { ALL } from '../../constants/bookListStatuses';
 
 const PREFIX = 'BOOKS';
 
-export const SET_BOOK_LIST_STATUS = `${PREFIX}/SET_BOOK_LIST_STATUS`;
 export const CLEAR_BOOK_DETAILS = `${PREFIX}/CLEAR_BOOK_DETAILS`;
 export const SET_SEARCH_QUERY = `${PREFIX}/SET_SEARCH_QUERY`;
 export const START_LOADING_SEARCH_RESULTS = `${PREFIX}/START_LOADING_SEARCH_RESULTS`;
@@ -37,6 +36,8 @@ export const LOADING_BOOK_DETAILS_FAILED = `${PREFIX}/LOADING_BOOK_DETAILS_FAILE
 
 export const UPDATE_BOOK = `${PREFIX}/UPDATE_BOOK`;
 export const ADD_BOOK = `${PREFIX}/ADD_BOOK`;
+
+export const UPDATE_BOOK_DETAILS = `${PREFIX}/UPDATE_BOOK_DETAILS`;
 
 export const startUpdatingUsersBook = {
   type: START_UPDATING_USERS_BOOK,
@@ -86,11 +87,6 @@ export const startLoadingSearchResults = {
   type: START_LOADING_SEARCH_RESULTS,
 };
 
-export const setBookListStatus = (bookListStatus) => ({
-  type: SET_BOOK_LIST_STATUS,
-  bookListStatus,
-});
-
 export const removeBook = (id, bookListStatus) => ({
   type: REMOVE_BOOK,
   id,
@@ -103,6 +99,12 @@ export const updateBook = (bookId, bookListStatus, bookStatus, added) => ({
   bookListStatus,
   bookStatus,
   added,
+});
+
+export const updateBookDetails = (param, value) => ({
+  type: UPDATE_BOOK_DETAILS,
+  param,
+  value,
 });
 
 export const addBook = (book, bookListStatus) => ({
@@ -223,21 +225,25 @@ export const loadBookDetails = (params) => async (dispatch, getState) => {
   }
 };
 
-export const updateUserBook = ({ book, bookStatus, bookListStatus }) => async (dispatch, getState) => {
+export const updateUserBook = ({ bookId, bookStatus, bookListStatus, isCalledFromDetails }) => async (dispatch, getState) => {
   dispatch(startUpdatingUsersBook);
   const state = getState();
   const userId = getUserId(state);
   try {
-    const { data } = await DataService().updateUserBook({ bookId: book.bookId, bookStatus, userId });
+    const { data } = await DataService().updateUserBook({ bookId, bookStatus, userId });
+    if (isCalledFromDetails) {
+      dispatch(updateBookDetails('status', data.bookStatus));
+    }
     if (bookListStatus !== ALL) {
-      dispatch(removeBook(book.bookId, bookListStatus));
+      dispatch(removeBook(bookId, bookListStatus));
     }
     if (bookListStatus === ALL) {
-      dispatch(removeBookEverywhere(book.bookId));
+      dispatch(removeBookEverywhere(bookId));
     }
-    dispatch(updateBook(book.bookId, ALL, data.bookStatus, data.added));
+    dispatch(updateBook(bookId, ALL, data.bookStatus, data.added));
     dispatch(startLoadingBookList(bookStatus));
   } catch (e) {
+    console.log(e, 'e');
     dispatch(updatingUsersBookFailed);
   }
 };

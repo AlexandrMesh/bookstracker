@@ -31,7 +31,7 @@ const BookDetails = ({ navigation, route, bookDetails, loadBookDetails, loadingD
           style={{
             height: 300,
           }}
-          resizeMode="contain"
+          resizeMode='contain'
           source={{
             uri: `https://omegaprokat.ru/images/${bookDetails.coverPath}`,
           }}
@@ -74,12 +74,13 @@ const BookDetails = ({ navigation, route, bookDetails, loadBookDetails, loadingD
         </Pressable>
       </View>
       <BookStatusSlideMenu
+        book={bookDetails}
         bookId={bookId}
-        bookStatus={bookDetails.status}
         updateUserBook={updateUserBook}
         isVisible={slideMenuVisibility}
         bookListStatus={ALL}
         onClose={hideSlideMenu}
+        isCalledFromDetails
       />
     </ScrollView>
   );

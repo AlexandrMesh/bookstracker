@@ -3,7 +3,6 @@ import updateIn from '../../utils/updateIn';
 import { ALL } from '../../constants/bookListStatuses';
 import { IDLE, PENDING, SUCCEEDED, FAILED } from '../../constants/loadingStatuses';
 import {
-  SET_BOOK_LIST_STATUS,
   BOOK_DETAILS_LOADED,
   CLEAR_BOOK_DETAILS,
   SET_SEARCH_QUERY,
@@ -23,6 +22,7 @@ import {
   LOADING_BOOK_DETAILS_FAILED,
   UPDATE_BOOK,
   ADD_BOOK,
+  UPDATE_BOOK_DETAILS,
 } from '../actions/booksActions';
 
 const initialState = {
@@ -95,11 +95,6 @@ const initialState = {
 };
 
 export default createReducer(initialState, (state, action) => ({
-  [SET_BOOK_LIST_STATUS]: () => ({
-    ...state,
-    bookListStatus: action.bookListStatus,
-  }),
-
   [UPDATE_BOOK]: () => ({
     ...state,
     bookList: {
@@ -310,5 +305,16 @@ export default createReducer(initialState, (state, action) => ({
   [CLEAR_BOOK_DETAILS]: () => ({
     ...state,
     bookDetails: initialState.bookDetails,
+  }),
+
+  [UPDATE_BOOK_DETAILS]: () => ({
+    ...state,
+    bookDetails: {
+      ...state.bookDetails,
+      data: {
+        ...state.bookDetails.data,
+        [action.param]: action.value,
+      },
+    },
   }),
 }));

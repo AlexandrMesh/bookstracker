@@ -46,12 +46,12 @@ const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookList
     <View style={styles.item}>
       <Image
         style={styles.cover}
-        resizeMode="contain"
+        resizeMode='contain'
         source={{
           uri: `https://omegaprokat.ru/images/${item.coverPath}`,
         }}
       />
-      <Pressable onPress={() => navigation.navigate('BookDetails', { bookId: item.id, title: item.title })}>
+      <Pressable onPress={() => navigation.navigate('BookDetails', { bookId: item.bookId, title: item.title })}>
         <Text>{item.title}</Text>
       </Pressable>
       <Text>
@@ -68,7 +68,7 @@ const BookList = ({ bookList, loadBookList, searchText, updateUserBook, bookList
       </Text>
 
       <Button
-        title="remove"
+        title='remove'
         onPress={() => {
           removeBook(item.bookId, bookListStatus);
           LayoutAnimation.configureNext(layoutAnimConfig);

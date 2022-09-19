@@ -11,7 +11,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   loadBookDetails: (params) => dispatch(loadBookDetails(params)),
   clearBookDetails: () => dispatch(clearBookDetails),
-  updateUserBook: ({ bookId, bookStatus, bookListStatus }) => dispatch(updateUserBook({ bookId, bookStatus, bookListStatus })),
+  updateUserBook: ({ bookId, bookStatus, bookListStatus, isCalledFromDetails }) =>
+    dispatch(updateUserBook({ bookId, bookStatus, bookListStatus, isCalledFromDetails })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookDetails);

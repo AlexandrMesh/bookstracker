@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
-import { deriveInProgressBookList, getInProgressBookListHasNextPage, getLoadingInProgressBookListStatus } from '../../../redux/selectors/books';
+import { deriveSortedBookListData, deriveBookListHasNextPage, deriveLoadingBookListStatus } from '../../../redux/selectors/books';
 import { loadBookList } from '../../../redux/actions/booksActions';
+import { IN_PROGRESS } from '../../../constants/bookListStatuses';
 import InProgressBooks from './InProgressBooks';
 
 const mapStateToProps = (state) => ({
-  bookList: deriveInProgressBookList(state),
-  loadingDataStatus: getLoadingInProgressBookListStatus(state),
-  hasNextPage: getInProgressBookListHasNextPage(state),
+  bookList: deriveSortedBookListData(IN_PROGRESS)(state),
+  loadingDataStatus: deriveLoadingBookListStatus(IN_PROGRESS)(state),
+  hasNextPage: deriveBookListHasNextPage(IN_PROGRESS)(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

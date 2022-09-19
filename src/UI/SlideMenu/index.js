@@ -17,7 +17,7 @@ const SlideMenu = ({ isVisible, onClose, onReset, children, title, resetTitle })
         }}
       />
     </Modal>
-    <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
+    <Modal animationType='slide' transparent visible={isVisible} onRequestClose={onClose}>
       <View style={{ display: 'flex', justifyContent: 'flex-end', height: '100%' }}>
         <Pressable onPress={onClose} style={{ height: '100%', width: '100%', position: 'absolute', elevation: 5 }} />
         <View style={{ backgroundColor: 'white', elevation: 6, borderTopRightRadius: 5, borderTopLeftRadius: 5 }}>
@@ -41,7 +41,7 @@ const SlideMenu = ({ isVisible, onClose, onReset, children, title, resetTitle })
               ) : null}
             </View>
             <Pressable onPress={onClose}>
-              <Icon name="close" size={24} color="#333" />
+              <Icon name='close' size={24} color='#333' />
             </Pressable>
           </View>
           {children}
